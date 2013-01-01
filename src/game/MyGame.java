@@ -17,6 +17,11 @@ public class MyGame extends Game {
 		setScreen(gameScreen);
 	}
 	
+	@Override
+	public void dispose() {
+		gameScreen.dispose();
+	}
+	
 	public GameScreen getGameScreen() {
 		return gameScreen;
 	}
@@ -28,7 +33,7 @@ public class MyGame extends Game {
 	public static void main(String args[]) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.width = 800;
-		cfg.height = 600;
+		cfg.height = 640;
 		LwjglApplication app = new LwjglApplication(new MyGame(), cfg);
 	}
 }
