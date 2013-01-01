@@ -12,6 +12,7 @@ public class GameScreen implements Screen {
 	private MyGame game;
 	private Texture background;
 	private TextureRegion trailingBackground;
+	private TextureRegion lightBackgroundTile;
 	private SpriteBatch batch;
 	
 	public GameScreen(MyGame game) {
@@ -42,6 +43,13 @@ public class GameScreen implements Screen {
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
 		batch.draw(trailingBackground, 512, Gdx.graphics.getHeight() - 512);
+		int heightToCover = Gdx.graphics.getHeight() - 512;
+		int widthToCover = Gdx.graphics.getWidth();
+		for(int w = 0; w < widthToCover; w += 32) {
+			for(int h = 0; h < heightToCover; h += 32) {
+				batch.draw(lightBackgroundTile, w, h, 32, 32);
+			}
+		}
 		batch.end();
 	}
 
@@ -63,6 +71,7 @@ public class GameScreen implements Screen {
 		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
 		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
+		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
 	}
 
 }
