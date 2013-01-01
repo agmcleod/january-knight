@@ -21,19 +21,12 @@ public class Entity {
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
 	
+	public Entity() {
+		
+	}
+	
 	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated) {
-		this.setX(x);
-		this.setY(y);
-		this.setWidth(width);
-		this.setHeight(height);
-		this.setTextureImage(textureImage);
-		this.setAnimated(animated);
-		if(this.animated) {
-			animations = new Array<Animation>();
-		}
-		else {
-			frames = new Array<TextureRegion>();
-		}
+		init(x, y, width, height, textureImage, animated);
 	}
 	
 	public void addAnimation(int[][] coords) {
@@ -85,6 +78,21 @@ public class Entity {
 
 	public int getY() {
 		return y;
+	}
+	
+	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated) {
+		this.setX(x);
+		this.setY(y);
+		this.setWidth(width);
+		this.setHeight(height);
+		this.setTextureImage(textureImage);
+		this.setAnimated(animated);
+		if(this.animated) {
+			animations = new Array<Animation>();
+		}
+		else {
+			frames = new Array<TextureRegion>();
+		}
 	}
 
 	public boolean isAnimated() {

@@ -3,6 +3,7 @@ package game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,10 +12,12 @@ public class GameScreen implements Screen {
 	
 	private MyGame game;
 	private Texture background;
-	private Texture playerTexture;
 	private TextureRegion trailingBackground;
 	private TextureRegion lightBackgroundTile;
 	private SpriteBatch batch;
+	private Player player;
+	private float stateTime = 0;
+	private OrthographicCamera camera;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
@@ -39,8 +42,11 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void render(float arg0) {
+	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		camera.update();
+		stateTime += Gdx.graphics.getDeltaTime();
+		
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
 		batch.draw(trailingBackground, 512, Gdx.graphics.getHeight() - 512);
@@ -51,7 +57,7 @@ public class GameScreen implements Screen {
 				batch.draw(lightBackgroundTile, w, h, 32, 32);
 			}
 		}
-		batch.draw(playerTexture, 0, 0, 64, 128);
+		player.render(stateTime, batch);
 		batch.end();
 	}
 
@@ -74,7 +80,9 @@ public class GameScreen implements Screen {
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
 		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
 		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
-		playerTexture = new Texture(Gdx.files.internal("assets/player.png"));
+		player = new Player(0, 0);
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false);
 	}
 
 }
