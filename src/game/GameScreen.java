@@ -11,6 +11,7 @@ public class GameScreen implements Screen {
 	
 	private MyGame game;
 	private Texture background;
+	private Texture playerTexture;
 	private TextureRegion trailingBackground;
 	private TextureRegion lightBackgroundTile;
 	private SpriteBatch batch;
@@ -50,6 +51,7 @@ public class GameScreen implements Screen {
 				batch.draw(lightBackgroundTile, w, h, 32, 32);
 			}
 		}
+		batch.draw(playerTexture, 0, 0, 64, 128);
 		batch.end();
 	}
 
@@ -72,6 +74,7 @@ public class GameScreen implements Screen {
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
 		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
 		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
+		playerTexture = new Texture(Gdx.files.internal("assets/player.png"));
 	}
 
 }
