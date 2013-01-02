@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen {
 	
@@ -18,9 +19,12 @@ public class GameScreen implements Screen {
 	private Player player;
 	private float stateTime = 0;
 	private OrthographicCamera camera;
+	private Array<Level> levels;
+	private int currentLevel = 0;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
+		levels = new Array<Level>();
 	}
 
 	@Override
@@ -57,8 +61,10 @@ public class GameScreen implements Screen {
 				batch.draw(lightBackgroundTile, w, h, 32, 32);
 			}
 		}
+		
 		player.render(stateTime, batch);
 		batch.end();
+		levels.get(currentLevel).render(camera);
 	}
 
 	@Override
@@ -83,6 +89,7 @@ public class GameScreen implements Screen {
 		player = new Player(0, 0);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
+		levels.add(new Level("levelone.tmx"));
 	}
 
 }
