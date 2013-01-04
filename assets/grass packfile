@@ -9,24 +9,17 @@ grass
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 2
 grass
   rotate: false
   xy: 36, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
-grass
-  rotate: false
-  xy: 70, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
   index: 1
 grass
   rotate: false
-  xy: 2, 36
+  xy: 70, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
