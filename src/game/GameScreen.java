@@ -28,7 +28,7 @@ public class GameScreen implements Screen {
 	public GameScreen(MyGame game) {
 		this.game = game;
 		levels = new Array<Level>();
-		world = new World(new Vector2(0, -10), true);
+		//world = new World(new Vector2(0, -10), true);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		player.render(stateTime, batch);
+		//player.render(stateTime, batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
 	}
