@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class GameScreen implements Screen {
@@ -24,17 +28,24 @@ public class GameScreen implements Screen {
 	private Array<Level> levels;
 	private int currentLevel = 0;
 	private World world;
+	private static final float WORLD_TO_BOX = 0.01f;
+	private static final float BOX_TO_WORLD = 100f;
+	private Box2DDebugRenderer debugRenderer;
+	private BodyDef ground;
+	private Body groundBody;
+	private PolygonShape groundShape;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
 		levels = new Array<Level>();
-		//world = new World(new Vector2(0, -10), true);
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
 		background.dispose();
+		player.dispose();
+		groundShape.dispose();
 	}
 
 	@Override
@@ -65,10 +76,12 @@ public class GameScreen implements Screen {
 				batch.draw(lightBackgroundTile, w, h, 32, 32);
 			}
 		}
-		
+		player.update();
 		player.render(stateTime, batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
+		debugRenderer.render(world, camera.combined);
+		world.step(1/60f, 6, 2);
 	}
 
 	@Override
@@ -90,10 +103,18 @@ public class GameScreen implements Screen {
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
 		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
 		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
-		player = new Player(0, 32);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
 		levels.add(new Level("levelone.tmx"));
+		world = new World(new Vector2(0, -10), true);
+		debugRenderer = new Box2DDebugRenderer();
+		
+		player = new Player(0, 300, world);
+		ground = new BodyDef();
+		ground.position.set(0,16);
+		groundBody = world.createBody(ground);
+		groundShape = new PolygonShape();
+		groundShape.setAsBox(Gdx.graphics.getWidth(), 16.0f);
+		groundBody.createFixture(groundShape, 0.0f);
 	}
-
 }

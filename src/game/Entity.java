@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Entity {
 	private int x;
@@ -20,13 +24,16 @@ public class Entity {
 	private boolean animated;
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
+	private BodyDef bodyDef;
+	private Body body;
+	private World world;
 	
 	public Entity() {
 		
 	}
 	
-	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated) {
-		init(x, y, width, height, textureImage, animated);
+	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated, World world) {
+		init(x, y, width, height, textureImage, animated, world);
 	}
 	
 	public void addAnimation(int[][] coords) {
@@ -46,12 +53,15 @@ public class Entity {
 		Rectangle r = getCollisionRectangle();
 		return " x : " + r.x + " y: " + r.y + " width: " + r.width + " height: " + r.height; 
 	}
-
-
+	
 	public Array<Animation> getAnimations() {
 		return animations;
 	}
 	
+	public Body getBody() {
+		return body;
+	}
+
 	public Rectangle getCollisionRectangle() {
 		return new Rectangle(this.x, this.y, this.width, this.height);
 	}
@@ -72,6 +82,10 @@ public class Entity {
 		return width;
 	}
 
+	public World getWorld() {
+		return world;
+	}
+	
 	public int getX() {
 		return x;
 	}
@@ -80,7 +94,7 @@ public class Entity {
 		return y;
 	}
 	
-	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated) {
+	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated, World world) {
 		this.setX(x);
 		this.setY(y);
 		this.setWidth(width);
@@ -93,12 +107,17 @@ public class Entity {
 		else {
 			frames = new Array<TextureRegion>();
 		}
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.position.set(x + width / 2, y + height / 2);
+		setBody(world.createBody(bodyDef));
+		this.setWorld(world);
 	}
 
 	public boolean isAnimated() {
 		return animated;
 	}
-	
+
 	public void render(float stateTime, SpriteBatch batch) {
 		TextureRegion currentFrame;
 		if(this.animated) {
@@ -119,6 +138,10 @@ public class Entity {
 		this.animations = animations;
 	}
 
+	public void setBody(Body body) {
+		this.body = body;
+	}
+
 	public void setFrames(Array<TextureRegion> frames) {
 		this.frames = frames;
 	}
@@ -135,11 +158,20 @@ public class Entity {
 		this.width = width;
 	}
 
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
 	public void setX(int x) {
 		this.x = x;
 	}
 
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	public void update() {
+		this.x = (int) bodyDef.position.x;
+		this.y = (int) bodyDef.position.y;
 	}
 }
