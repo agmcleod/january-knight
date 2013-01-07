@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		//player.render(stateTime, batch);
+		player.render(stateTime, batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
 	}
@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
 		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
 		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
-		player = new Player(0, 0);
+		player = new Player(0, 32);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
 		levels.add(new Level("levelone.tmx"));

@@ -34,6 +34,7 @@ public class MyGame extends Game {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.width = 800;
 		cfg.height = 640;
+		cfg.title = "1GAM - January - Knight";
 		LwjglApplication app = new LwjglApplication(new MyGame(), cfg);
 	}
 }
