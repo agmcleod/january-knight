@@ -24,8 +24,6 @@ public class Entity {
 	private boolean animated;
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
-	private BodyDef bodyDef;
-	private Body body;
 	private World world;
 	
 	public Entity() {
@@ -56,10 +54,6 @@ public class Entity {
 	
 	public Array<Animation> getAnimations() {
 		return animations;
-	}
-	
-	public Body getBody() {
-		return body;
 	}
 
 	public Rectangle getCollisionRectangle() {
@@ -107,10 +101,6 @@ public class Entity {
 		else {
 			frames = new Array<TextureRegion>();
 		}
-		bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(x + width / 2, y + height / 2);
-		setBody(world.createBody(bodyDef));
 		this.setWorld(world);
 	}
 
@@ -136,10 +126,6 @@ public class Entity {
 
 	public void setAnimations(Array<Animation> animations) {
 		this.animations = animations;
-	}
-
-	public void setBody(Body body) {
-		this.body = body;
 	}
 
 	public void setFrames(Array<TextureRegion> frames) {
@@ -168,10 +154,5 @@ public class Entity {
 
 	public void setY(int y) {
 		this.y = y;
-	}
-	
-	public void update() {
-		this.x = (int) bodyDef.position.x;
-		this.y = (int) bodyDef.position.y;
 	}
 }

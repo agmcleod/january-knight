@@ -28,8 +28,8 @@ public class GameScreen implements Screen {
 	private Array<Level> levels;
 	private int currentLevel = 0;
 	private World world;
-	private static final float WORLD_TO_BOX = 0.01f;
-	private static final float BOX_TO_WORLD = 100f;
+	static final float WORLD_TO_BOX = 0.01f;
+	static final float BOX_TO_WORLD = 100f;
 	private Box2DDebugRenderer debugRenderer;
 	private BodyDef ground;
 	private Body groundBody;
@@ -80,6 +80,8 @@ public class GameScreen implements Screen {
 		player.render(stateTime, batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
+		
+		// physics updates
 		debugRenderer.render(world, camera.combined);
 		world.step(1/60f, 6, 2);
 	}
@@ -111,10 +113,12 @@ public class GameScreen implements Screen {
 		
 		player = new Player(0, 300, world);
 		ground = new BodyDef();
-		ground.position.set(0,16);
+		// set the position half way up the ground
+		ground.position.set(0,16 * GameScreen.WORLD_TO_BOX);
 		groundBody = world.createBody(ground);
 		groundShape = new PolygonShape();
-		groundShape.setAsBox(Gdx.graphics.getWidth(), 16.0f);
+		// make the height 16px so it doubles to 32
+		groundShape.setAsBox(Gdx.graphics.getWidth() * GameScreen.WORLD_TO_BOX, 16.0f * GameScreen.WORLD_TO_BOX);
 		groundBody.createFixture(groundShape, 0.0f);
 	}
 }
