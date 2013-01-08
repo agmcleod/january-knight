@@ -82,8 +82,8 @@ public class GameScreen implements Screen {
 		levels.get(currentLevel).render(camera);
 		
 		// physics updates
-		debugRenderer.render(world, camera.combined);
 		world.step(1/60f, 6, 2);
+		debugRenderer.render(world, camera.combined);
 	}
 
 	@Override
