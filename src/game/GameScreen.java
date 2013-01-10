@@ -78,6 +78,17 @@ public class GameScreen implements Screen, InputProcessor {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void initBackground() {
+		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
+		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
+		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
+		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
+	}
+	
+	public void loadLevels() {
+		levels.add(new Level("levelone.tmx"));
+	}
 
 	@Override
 	public boolean mouseMoved(int arg0, int arg1) {
@@ -140,17 +151,19 @@ public class GameScreen implements Screen, InputProcessor {
 	public void show() {
 		Gdx.input.setInputProcessor(this);
 		batch = new SpriteBatch();
-		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
-		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
-		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
-		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
+		initBackground();
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
-		levels.add(new Level("levelone.tmx"));
+		
+		loadLevels();
+		
 		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
 		
 		player = new Player(0, 300, world);
+		
+		// temp ground logic
 		ground = new BodyDef();
 		// set the position half way up the ground
 		ground.position.set(0,16 * GameScreen.WORLD_TO_BOX);
