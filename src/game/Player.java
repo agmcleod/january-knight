@@ -32,7 +32,7 @@ public class Player extends Entity {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = collisionBox;
 		fixtureDef.density = 10f; 
-		fixtureDef.friction = 0.4f;
+		fixtureDef.friction = 1f;
 		fixtureDef.restitution = 0f;
 		
 		body.createFixture(fixtureDef);

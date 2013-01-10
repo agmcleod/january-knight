@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -107,7 +108,9 @@ public class GameScreen implements Screen, InputProcessor {
 		update();
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		debugRenderer.render(world, camera.combined);
+		Matrix4 camMatrix = camera.combined.cpy();
+		camMatrix.scl(WORLD_TO_BOX);
+		debugRenderer.render(world, camMatrix);
 		
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
