@@ -37,12 +37,27 @@ public class Player extends Entity {
 		
 		body.createFixture(fixtureDef);
 		collisionBox.dispose();
-		
 		addFrame(0, 0, 128, 128);
 	}
 	
 	public void dispose() {
 		playerTexture.dispose();
+	}
+	
+	public void moveLeft() {
+		Vector2 vel = body.getLinearVelocity();
+		float desiredVel = -4;
+		float velChange = desiredVel - vel.x;
+		float force = body.getMass() * velChange / (1/60.0f);
+		body.applyForce(new Vector2(force, 0), body.getWorldCenter());
+	}
+	
+	public void moveRight() {
+		Vector2 vel = body.getLinearVelocity();
+		float desiredVel = 4;
+		float velChange = desiredVel - vel.x;
+	    float force = body.getMass() * velChange / (1/60.0f);
+	    body.applyForce(new Vector2(force, 0), body.getWorldCenter());
 	}
 	
 	public void update() {

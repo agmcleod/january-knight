@@ -1,6 +1,8 @@
 package game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, InputProcessor {
 	
 	private MyGame game;
 	private Texture background;
@@ -55,16 +57,46 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
+	public boolean keyDown(int keyCode) {
+		if(keyCode == Input.Keys.LEFT) {
+			player.moveLeft();
+		}
+		else if(keyCode == Input.Keys.RIGHT) {
+			player.moveRight();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void render(float delta) {
+		update();
+		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		camera.update();
-		stateTime += Gdx.graphics.getDeltaTime();
+		debugRenderer.render(world, camera.combined);
 		
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
@@ -76,14 +108,14 @@ public class GameScreen implements Screen {
 				batch.draw(lightBackgroundTile, w, h, 32, 32);
 			}
 		}
-		player.update();
 		player.render(stateTime, batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
 		
 		// physics updates
+		
 		world.step(1/60f, 6, 2);
-		debugRenderer.render(world, camera.combined);
+		
 	}
 
 	@Override
@@ -99,7 +131,14 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
+	public boolean scrolled(int arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public void show() {
+		Gdx.input.setInputProcessor(this);
 		batch = new SpriteBatch();
 		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
 		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
@@ -120,5 +159,31 @@ public class GameScreen implements Screen {
 		// make the height 16px so it doubles to 32
 		groundShape.setAsBox(Gdx.graphics.getWidth() * GameScreen.WORLD_TO_BOX, 16.0f * GameScreen.WORLD_TO_BOX);
 		groundBody.createFixture(groundShape, 0.0f);
+	}
+
+	@Override
+	public boolean touchDown(int arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void update() {
+		stateTime += Gdx.graphics.getDeltaTime();
+		camera.update();
+		GL10 gl = Gdx.app.getGraphics().getGL10();
+		camera.apply(gl);
+		player.update();
 	}
 }
