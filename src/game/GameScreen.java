@@ -108,9 +108,8 @@ public class GameScreen implements Screen, InputProcessor {
 		update();
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Matrix4 camMatrix = camera.combined.cpy();
-		camMatrix.scl(WORLD_TO_BOX);
-		debugRenderer.render(world, camMatrix);
+		Matrix4 cameraCopy = camera.combined.cpy();
+		debugRenderer.render(world, cameraCopy.scl(BOX_TO_WORLD));
 		
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
