@@ -16,6 +16,8 @@ public class Player extends Entity {
 	private PolygonShape collisionBox;
 	private BodyDef bodyDef;
 	private Body body;
+	private final float maxVelocityX = 5;
+	private boolean moving = false;
 	
 	public Player(int x, int y, World world) {
 		super();
@@ -32,7 +34,7 @@ public class Player extends Entity {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = collisionBox;
 		fixtureDef.density = 10f; 
-		fixtureDef.friction = 1f;
+		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0f;
 		
 		body.createFixture(fixtureDef);
@@ -42,6 +44,10 @@ public class Player extends Entity {
 	
 	public void dispose() {
 		playerTexture.dispose();
+	}
+	
+	public boolean isMoving() {
+		return moving;
 	}
 	
 	public void moveLeft() {
@@ -54,10 +60,20 @@ public class Player extends Entity {
 	
 	public void moveRight() {
 		Vector2 vel = body.getLinearVelocity();
-		float desiredVel = 4;
-		float velChange = desiredVel - vel.x;
-	    float force = body.getMass() * velChange / (1/60.0f);
-	    body.applyForce(new Vector2(force, 0), body.getWorldCenter());
+		if(isMoving()) {
+		    body.applyForce(new Vector2(maxVelocityX, 0), body.getWorldCenter());
+		    if(vel.x > maxVelocityX) {
+		    	vel.x = maxVelocityX;
+		    }
+		    body.setLinearVelocity(vel);
+		}
+		else {
+			body.setLinearVelocity(new Vector2(0, vel.y));
+		}
+	}
+	
+	public void setMoving(boolean moving) {
+		this.moving = moving;
 	}
 	
 	public void update() {

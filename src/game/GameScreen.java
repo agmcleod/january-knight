@@ -59,12 +59,6 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean keyDown(int keyCode) {
-		if(keyCode == Input.Keys.LEFT) {
-			player.moveLeft();
-		}
-		else if(keyCode == Input.Keys.RIGHT) {
-			player.moveRight();
-		}
 		return false;
 	}
 
@@ -106,10 +100,7 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void render(float delta) {
 		update();
-		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Matrix4 cameraCopy = camera.combined.cpy();
-		debugRenderer.render(world, cameraCopy.scl(BOX_TO_WORLD));
 		
 		batch.begin();
 		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
@@ -126,6 +117,9 @@ public class GameScreen implements Screen, InputProcessor {
 		levels.get(currentLevel).render(camera);
 		
 		// physics updates
+		
+		Matrix4 cameraCopy = camera.combined.cpy();
+		debugRenderer.render(world, cameraCopy.scl(BOX_TO_WORLD));
 		
 		world.step(1/60f, 6, 2);
 		
@@ -199,6 +193,20 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.update();
 		GL10 gl = Gdx.app.getGraphics().getGL10();
 		camera.apply(gl);
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			player.setMoving(true);
+			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+				player.moveLeft();
+			}
+			else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+				player.moveRight();
+			}
+		}
+		else {
+			player.setMoving(false);
+		}
+		
 		player.update();
 	}
 }
