@@ -63,7 +63,6 @@ public class Player extends Entity implements ContactListener {
 		Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
 		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
-			System.out.println("Fixture A/B contact");
 			touchingOnFoot = true;
 		}
 	}
@@ -76,8 +75,7 @@ public class Player extends Entity implements ContactListener {
 	public void endContact(Contact contact) {
 		Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
-		if(fixtureUserDataA.getClass() == Player.class || fixtureUserDataB.getClass() == Player.class) {
-			System.out.println("Fixture A/B contact");
+		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
 			touchingOnFoot = false;
 		}
 	}
@@ -87,7 +85,9 @@ public class Player extends Entity implements ContactListener {
 	}
 	
 	public void jump() {
-		body.applyLinearImpulse(new Vector2(0f, maxVelocityY), body.getWorldCenter());
+		if(!touchingOnFoot) {
+			body.applyLinearImpulse(new Vector2(0f, maxVelocityY), body.getWorldCenter());
+		}	
 	}
 	
 	public void moveLeft() {
