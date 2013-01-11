@@ -194,17 +194,25 @@ public class GameScreen implements Screen, InputProcessor {
 		GL10 gl = Gdx.app.getGraphics().getGL10();
 		camera.apply(gl);
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			player.setMoving(true);
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) 
+				|| Gdx.input.isKeyPressed(Input.Keys.RIGHT)
+				|| Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				player.moveLeft();
+				player.setMoving(true);
 			}
 			else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				player.moveRight();
+				player.setMoving(true);
+			}
+			
+			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				player.jump();
 			}
 		}
-		else {
+		else if(player.isMoving()) {
 			player.setMoving(false);
+			player.stopMoving();
 		}
 		
 		player.update();
