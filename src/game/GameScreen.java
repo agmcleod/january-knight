@@ -82,7 +82,7 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 	
 	public void loadLevels() {
-		levels.add(new Level("levelone.tmx"));
+		levels.add(new Level("levelone.tmx", world));
 	}
 
 	@Override
