@@ -33,10 +33,8 @@ public class GameScreen implements Screen, InputProcessor {
 	private World world;
 	static final float WORLD_TO_BOX = 0.01f;
 	static final float BOX_TO_WORLD = 100f;
+	static final float TILE_SIZE = 32f;
 	private Box2DDebugRenderer debugRenderer;
-	private BodyDef ground;
-	private Body groundBody;
-	private PolygonShape groundShape;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
@@ -48,7 +46,6 @@ public class GameScreen implements Screen, InputProcessor {
 		batch.dispose();
 		background.dispose();
 		player.dispose();
-		groundShape.dispose();
 	}
 
 	@Override
@@ -151,23 +148,12 @@ public class GameScreen implements Screen, InputProcessor {
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
-		
-		loadLevels();
+
 		
 		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
-		
+		loadLevels();
 		player = new Player(0, 300, world);
-		
-		// temp ground logic
-		ground = new BodyDef();
-		// set the position half way up the ground
-		ground.position.set(0,16 * GameScreen.WORLD_TO_BOX);
-		groundBody = world.createBody(ground);
-		groundShape = new PolygonShape();
-		// make the height 16px so it doubles to 32
-		groundShape.setAsBox(Gdx.graphics.getWidth() * GameScreen.WORLD_TO_BOX, 16.0f * GameScreen.WORLD_TO_BOX);
-		groundBody.createFixture(groundShape, 0.0f);
 	}
 
 	@Override
