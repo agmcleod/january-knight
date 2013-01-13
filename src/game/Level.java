@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -19,6 +20,7 @@ public class Level {
 	private TileMapRenderer tileMapRenderer;
 	private World world;
 	private int[] layerIndexes;
+	private BodyDef collisionDef;
 	
 	public Level(String filename, World world) {
 		tiledMap = TiledLoader.createMap(Gdx.files.internal("assets/" + filename));
@@ -40,7 +42,12 @@ public class Level {
 		while(it.hasNext()) {
 			TiledLayer layer = it.next();
 			if(layer.name.equals("collision")) {
-				
+				int[][] tiles = layer.tiles;
+				for(int ty = 0; ty < tiles.length; ty++) {
+					for(int tx = 0; tx < tiles.length; tx++) {
+						System.out.println(tiledMap.getTileProperty(tiles[ty][tx], "type"));
+					}
+				}
 			}
 			else {
 				tempIndex.add(layerIndex);
