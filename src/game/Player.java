@@ -26,9 +26,14 @@ public class Player extends Entity implements ContactListener {
 	private boolean moving = false;
 	private boolean touchingOnFoot = false;
 	
+	private int originalX;
+	private int originalY;
+	
 	public Player(int x, int y, World world) {
 		super();
 		playerTexture = new Texture(Gdx.files.internal("assets/hero.png"));
+		originalX = x;
+		originalY = y;
 		init(x, y, 128, 128, playerTexture, false, world);
 		
 		// main body
@@ -109,6 +114,13 @@ public class Player extends Entity implements ContactListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void reset() {
+		setX(originalX);
+		setY(originalY);
+		body.setTransform(new Vector2(originalX, originalY), 0f);
+		body.setLinearVelocity(new Vector2(0, 0));
+	}
 
 	public void setMoving(boolean moving) {
 		this.moving = moving;
@@ -120,7 +132,11 @@ public class Player extends Entity implements ContactListener {
 	}
 
 	public void update() {
-		this.setX((int) ((body.getPosition().x) * GameScreen.BOX_TO_WORLD));
-		this.setY((int) ((body.getPosition().y) * GameScreen.BOX_TO_WORLD));
+		setX((int) ((body.getPosition().x) * GameScreen.BOX_TO_WORLD));
+		setY((int) ((body.getPosition().y) * GameScreen.BOX_TO_WORLD));
+		
+		if((getY() + getHeight()) <= 0) {
+			reset();
+		}
 	}
 }
