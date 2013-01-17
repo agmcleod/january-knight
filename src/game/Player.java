@@ -118,8 +118,9 @@ public class Player extends Entity implements ContactListener {
 	public void reset() {
 		setX(originalX);
 		setY(originalY);
-		body.setTransform(new Vector2(originalX, originalY), 0f);
+		body.setTransform(new Vector2(originalX * GameScreen.WORLD_TO_BOX, originalY * GameScreen.WORLD_TO_BOX), 0f);
 		body.setLinearVelocity(new Vector2(0, 0));
+		body.setAngularVelocity(0);
 	}
 
 	public void setMoving(boolean moving) {

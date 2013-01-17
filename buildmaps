@@ -1,0 +1,2 @@
+#!/bin/bash
+java -classpath libs/gdx.jar:libs/gdx-tools.jar:libs/gdx-tiled-preprocessor.jar com.badlogic.gdx.tiledmappacker.TiledMapPacker maps assets

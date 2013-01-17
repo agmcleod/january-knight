@@ -9,24 +9,38 @@ grass
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 5
 grass
   rotate: false
   xy: 36, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 4
 grass
   rotate: false
   xy: 70, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 1
+  index: 3
 grass
   rotate: false
   xy: 2, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+grass
+  rotate: false
+  xy: 2, 70
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+grass
+  rotate: false
+  xy: 36, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -42,57 +56,38 @@ grass
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 3
+  index: 5
 grass
   rotate: false
   xy: 36, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 4
 grass
   rotate: false
   xy: 70, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 1
-grass
-  rotate: false
-  xy: 2, 36
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 0
-
-grass3.png
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-grass
-  rotate: false
-  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 grass
   rotate: false
-  xy: 36, 2
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 grass
   rotate: false
-  xy: 70, 2
+  xy: 2, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 grass
   rotate: false
-  xy: 2, 36
+  xy: 36, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
