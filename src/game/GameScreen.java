@@ -5,12 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -27,7 +32,12 @@ public class GameScreen implements Screen, InputProcessor {
 	private SpriteBatch batch;
 	private Player player;
 	private float stateTime = 0;
+	
+	// camera properties
 	private OrthographicCamera camera;
+    private Rectangle glViewport;
+    private float rotationSpeed;
+	
 	private Array<Level> levels;
 	private int currentLevel = 0;
 	private World world;
@@ -146,8 +156,11 @@ public class GameScreen implements Screen, InputProcessor {
 		batch = new SpriteBatch();
 		initBackground();
 		
+		rotationSpeed = 0.5f;
+		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
+		camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 
 		
 		world = new World(new Vector2(0, -10), true);
@@ -186,10 +199,20 @@ public class GameScreen implements Screen, InputProcessor {
 			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				player.moveLeft();
 				player.setMoving(true);
+				if(player.getX() >= Gdx.graphics.getWidth() / 2) {
+					int diff = player.getX() - Gdx.graphics.getWidth();
+					//camera.translate(-diff, 0);
+					camera.position.set(player.getX(), camera.position.y, 0);
+				}
 			}
 			else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				player.moveRight();
 				player.setMoving(true);
+				if(player.getX() >= Gdx.graphics.getWidth() / 2) {
+					int diff = player.getX() - Gdx.graphics.getWidth();
+					//camera.translate(diff, 0);
+					camera.position.set(player.getX(), camera.position.y, 0);
+				}
 			}
 			
 			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
