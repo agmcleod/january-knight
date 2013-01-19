@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 
-public class Player extends Entity implements ContactListener {
+public class Player extends Entity {
 	
 	private Texture playerTexture;
 	private PolygonShape collisionBox;
@@ -55,51 +55,29 @@ public class Player extends Entity implements ContactListener {
 		Fixture f = body.createFixture(fixtureDef);
 		f.setUserData(this);
 		collisionBox.dispose();
-	    world.setContactListener(this);
+	    
 		
 		addFrame(0, 0, 128, 128);
-	}
-	
-	@Override
-	public void beginContact(Contact contact) {
-		Object fixtureUserDataA = contact.getFixtureA().getUserData();
-		Object fixtureUserDataB = contact.getFixtureB().getUserData();
-		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
-			WorldManifold worldManifold = contact.getWorldManifold();
-			Vector2 normal = worldManifold.getNormal();
-			if(normal.x == 0.0f && normal.y == 1.0f) {
-				touchingOnFoot = true;
-			}
-			else if(normal.x == -1.0f) {
-				touchingOnRight = true;
-			}
-			else if(normal.x == 1.0f) {
-				touchingOnLeft = true;
-			}
-			System.out.println("begin: "+ normal.x + "," + normal.y);
-		}
 	}
 	
 	public void dispose() {
 		playerTexture.dispose();
 	}
 	
-	@Override
-	public void endContact(Contact contact) {
-		Object fixtureUserDataA = contact.getFixtureA().getUserData();
-		Object fixtureUserDataB = contact.getFixtureB().getUserData();
-		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
-			//WorldManifold worldManifold = contact.getWorldManifold();
-			//Vector2 normal = worldManifold.getNormal();
-			touchingOnFoot = false;
-			touchingOnRight = false;
-			touchingOnLeft = false;
-			//System.out.println("end: " + normal.x + "," + normal.y);
-		}
-	}
-	
 	public boolean isMoving() {
 		return moving;
+	}
+	
+	public boolean isTouchingOnFoot() {
+		return touchingOnFoot;
+	}
+	
+	public boolean isTouchingOnLeft() {
+		return touchingOnLeft;
+	}
+	
+	public boolean isTouchingOnRight() {
+		return touchingOnRight;
 	}
 	
 	public void jump() {
@@ -129,17 +107,6 @@ public class Player extends Entity implements ContactListener {
 		}
 	}
 	
-	@Override
-	public void postSolve(Contact arg0, ContactImpulse arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void preSolve(Contact arg0, Manifold arg1) {
-		
-	}
-	
 	public void reset() {
 		setX(originalX);
 		setY(originalY);
@@ -154,6 +121,18 @@ public class Player extends Entity implements ContactListener {
 	
 	public void stayHere() {
 		body.setTransform(body.getPosition(), 0f);
+	}
+	
+	public void setTouchingOnFoot(boolean touchingOnFoot) {
+		this.touchingOnFoot = touchingOnFoot;
+	}
+	
+	public void setTouchingOnLeft(boolean touchingOnLeft) {
+		this.touchingOnLeft = touchingOnLeft;
+	}
+	
+	public void setTouchingOnRight(boolean touchingOnRight) {
+		this.touchingOnRight = touchingOnRight;
 	}
 
 	public void stopMoving() {

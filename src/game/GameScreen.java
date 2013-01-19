@@ -46,6 +46,7 @@ public class GameScreen implements Screen, InputProcessor {
 	static final float BOX_TO_WORLD = 100f;
 	static final float TILE_SIZE = 32f;
 	private Box2DDebugRenderer debugRenderer;
+	private WorldCollision worldCollision;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
@@ -170,6 +171,7 @@ public class GameScreen implements Screen, InputProcessor {
 		player = new Player(0, 300, world);
 		
 		offset = new Vector2(0, 0);
+		worldCollision = new WorldCollision(world, player);
 	}
 
 	@Override
