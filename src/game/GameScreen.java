@@ -37,6 +37,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private OrthographicCamera camera;
     private Rectangle glViewport;
     private float rotationSpeed;
+    private Vector2 offset;
 	
 	private Array<Level> levels;
 	private int currentLevel = 0;
@@ -61,7 +62,6 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -109,18 +109,20 @@ public class GameScreen implements Screen, InputProcessor {
 		update();
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		batch.begin();
-		batch.draw(background, 0, Gdx.graphics.getHeight() - 512, 512, 512);
-		batch.draw(trailingBackground, 512, Gdx.graphics.getHeight() - 512);
+		/* batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		// background is not big enough for full screen, so tile it across until it's filled
+		batch.draw(background, offset.x, Gdx.graphics.getHeight() - 512, 512, 512);
+		batch.draw(trailingBackground, offset.x + 512, Gdx.graphics.getHeight() - 512);
 		int heightToCover = Gdx.graphics.getHeight() - 512;
 		int widthToCover = Gdx.graphics.getWidth();
 		for(int w = 0; w < widthToCover; w += 32) {
 			for(int h = 0; h < heightToCover; h += 32) {
-				batch.draw(lightBackgroundTile, w, h, 32, 32);
+				batch.draw(lightBackgroundTile, w + offset.x, h, 32, 32);
 			}
 		}
 		player.render(stateTime, batch);
-		batch.end();
+		batch.end(); */
 		levels.get(currentLevel).render(camera);
 		
 		// physics updates
@@ -161,12 +163,13 @@ public class GameScreen implements Screen, InputProcessor {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
 		camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
-
 		
 		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
 		loadLevels();
 		player = new Player(0, 300, world);
+		
+		offset = new Vector2(0, 0);
 	}
 
 	@Override
@@ -196,28 +199,30 @@ public class GameScreen implements Screen, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) 
 				|| Gdx.input.isKeyPressed(Input.Keys.RIGHT)
 				|| Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			boolean positionCam = false;
 			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				player.moveLeft();
 				player.setMoving(true);
-				if(player.getX() >= Gdx.graphics.getWidth() / 2) {
-					int diff = player.getX() - Gdx.graphics.getWidth();
-					//camera.translate(-diff, 0);
-					camera.position.set(player.getX(), camera.position.y, 0);
+				if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
+					positionCam = true;
 				}
 			}
 			else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				player.moveRight();
 				player.setMoving(true);
-				if(player.getX() >= Gdx.graphics.getWidth() / 2) {
-					int diff = player.getX() - Gdx.graphics.getWidth();
-					//camera.translate(diff, 0);
-					camera.position.set(player.getX(), camera.position.y, 0);
+				if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
+					positionCam = true;
 				}
 			}
 			
 			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				player.jump();
+				positionCam = true;
 			}
+			if(positionCam) {
+				camera.position.set(player.getRightX(), camera.position.y, 0);
+			}
+			updateOffset();
 		}
 		else if(player.isMoving()) {
 			player.setMoving(false);
@@ -225,5 +230,13 @@ public class GameScreen implements Screen, InputProcessor {
 		}
 		
 		player.update();
+	}
+	
+	public void updateOffset() {
+		offset.x = player.getRightX() - (Gdx.graphics.getWidth() / 2);
+		System.out.println("offset: " + offset.x);
+		if(offset.x < 0) {
+			offset.x = 0;
+		}
 	}
 }

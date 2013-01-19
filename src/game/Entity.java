@@ -67,6 +67,10 @@ public class Entity {
 	public int getHeight() {
 		return height;
 	}
+	
+	public int getRightX() {
+		return width + x;
+	}
 
 	public Texture getTextureImage() {
 		return textureImage;

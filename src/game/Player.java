@@ -21,7 +21,7 @@ public class Player extends Entity implements ContactListener {
 	private PolygonShape collisionBox;
 	private BodyDef bodyDef;
 	private Body body;
-	private final float maxVelocityX = 3f;
+	private final float maxVelocityX = 2.6f;
 	private final float maxVelocityY = 3.5f;
 	private boolean moving = false;
 	private boolean touchingOnFoot = false;
