@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><map height="20" orientation="orthogonal" tileheight="32" tilewidth="32" version="1.0" width="50"><properties><property name="blended tiles" value="1,2,3,6,8,9,10,11"/></properties>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><map height="20" orientation="orthogonal" tileheight="32" tilewidth="32" version="1.0" width="50"><properties><property name="blended tiles" value="1,2,3,6"/></properties>
  <tileset firstgid="1" name="grass" tileheight="32" tilewidth="32">
   <image height="64" source="grass.png" width="96"/>
  </tileset>

@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.WorldManifold;
 public class Player extends Entity {
 	
 	private Texture playerTexture;
-	private PolygonShape collisionBox;
 	private BodyDef bodyDef;
 	private Body body;
 	private final float maxVelocityX = 2.6f;
@@ -43,8 +42,9 @@ public class Player extends Entity {
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x * GameScreen.WORLD_TO_BOX, y * GameScreen.WORLD_TO_BOX);
+		bodyDef.fixedRotation = true;
 		body = getWorld().createBody(bodyDef);
-		collisionBox = new PolygonShape();
+		PolygonShape collisionBox = new PolygonShape();
 		collisionBox.setAsBox(32 * GameScreen.WORLD_TO_BOX, 64 * GameScreen.WORLD_TO_BOX, new Vector2(64 * GameScreen.WORLD_TO_BOX, 64 * GameScreen.WORLD_TO_BOX), 0.0f);
 		
 		FixtureDef fixtureDef = new FixtureDef();

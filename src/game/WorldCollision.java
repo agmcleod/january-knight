@@ -43,12 +43,9 @@ public class WorldCollision implements ContactListener {
 		Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
 		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
-			//WorldManifold worldManifold = contact.getWorldManifold();
-			//Vector2 normal = worldManifold.getNormal();
 			player.setTouchingOnFoot(false);
 			player.setTouchingOnLeft(false);
 			player.setTouchingOnRight(false);
-			//System.out.println("end: " + normal.x + "," + normal.y);
 		}
 	}
 
@@ -60,7 +57,7 @@ public class WorldCollision implements ContactListener {
 
 	@Override
 	public void preSolve(Contact contact, Manifold manifold) {
-		Object fixtureUserDataA = contact.getFixtureA().getUserData();
+		/* Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
 		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
 			WorldManifold worldManifold = contact.getWorldManifold();
@@ -71,7 +68,7 @@ public class WorldCollision implements ContactListener {
 			else if(normal.x == 0.0f && normal.y == 1.0f) {
 				player.setY((int) worldManifold.getPoints()[0].y);
 			}
-		}
+		} */
 	}
 
 }
