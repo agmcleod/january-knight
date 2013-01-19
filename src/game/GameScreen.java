@@ -109,7 +109,7 @@ public class GameScreen implements Screen, InputProcessor {
 		update();
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		/* batch.begin();
+		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
 		// background is not big enough for full screen, so tile it across until it's filled
 		batch.draw(background, offset.x, Gdx.graphics.getHeight() - 512, 512, 512);
@@ -122,7 +122,7 @@ public class GameScreen implements Screen, InputProcessor {
 			}
 		}
 		player.render(stateTime, batch);
-		batch.end(); */
+		batch.end();
 		levels.get(currentLevel).render(camera);
 		
 		// physics updates
@@ -199,42 +199,32 @@ public class GameScreen implements Screen, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) 
 				|| Gdx.input.isKeyPressed(Input.Keys.RIGHT)
 				|| Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			boolean positionCam = false;
 			if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 				player.moveLeft();
 				player.setMoving(true);
-				if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
-					positionCam = true;
-				}
 			}
 			else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 				player.moveRight();
 				player.setMoving(true);
-				if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
-					positionCam = true;
-				}
 			}
 			
 			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				player.jump();
-				positionCam = true;
 			}
-			if(positionCam) {
-				camera.position.set(player.getRightX(), camera.position.y, 0);
-			}
-			updateOffset();
 		}
 		else if(player.isMoving()) {
 			player.setMoving(false);
 			player.stopMoving();
 		}
-		
 		player.update();
+		updateOffset();
+		if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
+			camera.position.set(player.getRightX(), camera.position.y, 0);
+		}
 	}
 	
 	public void updateOffset() {
 		offset.x = player.getRightX() - (Gdx.graphics.getWidth() / 2);
-		System.out.println("offset: " + offset.x);
 		if(offset.x < 0) {
 			offset.x = 0;
 		}

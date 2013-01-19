@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.WorldManifold;
 
 public class Player extends Entity implements ContactListener {
 	
@@ -22,9 +23,11 @@ public class Player extends Entity implements ContactListener {
 	private BodyDef bodyDef;
 	private Body body;
 	private final float maxVelocityX = 2.6f;
-	private final float maxVelocityY = 3.5f;
+	private final float maxVelocityY = 20.5f;
 	private boolean moving = false;
 	private boolean touchingOnFoot = false;
+	private boolean touchingOnRight = false;
+	private boolean touchingOnLeft = false;
 	
 	private int originalX;
 	private int originalY;
@@ -49,15 +52,9 @@ public class Player extends Entity implements ContactListener {
 		fixtureDef.density = 10f; 
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0f;
-		
-		body.createFixture(fixtureDef);
-		
-		// foot sensor
-		collisionBox.setAsBox(0.3f, 0.3f, new Vector2(0f,-2f), 0);
-	    fixtureDef.isSensor = true;
-	    Fixture footSensorFixture = body.createFixture(fixtureDef);
-	    footSensorFixture.setUserData(this);
-	    collisionBox.dispose();
+		Fixture f = body.createFixture(fixtureDef);
+		f.setUserData(this);
+		collisionBox.dispose();
 	    world.setContactListener(this);
 		
 		addFrame(0, 0, 128, 128);
@@ -68,7 +65,18 @@ public class Player extends Entity implements ContactListener {
 		Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
 		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
-			touchingOnFoot = true;
+			WorldManifold worldManifold = contact.getWorldManifold();
+			Vector2 normal = worldManifold.getNormal();
+			if(normal.x == 0.0f && normal.y == 1.0f) {
+				touchingOnFoot = true;
+			}
+			else if(normal.x == -1.0f) {
+				touchingOnRight = true;
+			}
+			else if(normal.x == 1.0f) {
+				touchingOnLeft = true;
+			}
+			System.out.println("begin: "+ normal.x + "," + normal.y);
 		}
 	}
 	
@@ -81,7 +89,12 @@ public class Player extends Entity implements ContactListener {
 		Object fixtureUserDataA = contact.getFixtureA().getUserData();
 		Object fixtureUserDataB = contact.getFixtureB().getUserData();
 		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
+			//WorldManifold worldManifold = contact.getWorldManifold();
+			//Vector2 normal = worldManifold.getNormal();
 			touchingOnFoot = false;
+			touchingOnRight = false;
+			touchingOnLeft = false;
+			//System.out.println("end: " + normal.x + "," + normal.y);
 		}
 	}
 	
@@ -90,17 +103,30 @@ public class Player extends Entity implements ContactListener {
 	}
 	
 	public void jump() {
-		if(!touchingOnFoot) {
+		if(touchingOnFoot) {
 			body.applyLinearImpulse(new Vector2(0f, maxVelocityY), body.getWorldCenter());
 		}	
 	}
 	
 	public void moveLeft() {
-		body.applyLinearImpulse(new Vector2(-maxVelocityX, 0f), body.getWorldCenter());
+		if(touchingOnLeft) {
+			stopMoving(0);
+			stayHere();
+		}
+		else {
+			body.applyLinearImpulse(new Vector2(-maxVelocityX, 0f), body.getWorldCenter());
+		}
 	}
 	
 	public void moveRight() {
-		body.applyLinearImpulse(new Vector2(maxVelocityX, 0f), body.getWorldCenter());
+		if(touchingOnRight) {
+			stopMoving(0);
+			stayHere();
+			System.out.println("touching on right");
+		}
+		else {
+			body.applyLinearImpulse(new Vector2(maxVelocityX, 0f), body.getWorldCenter());
+		}
 	}
 	
 	@Override
@@ -111,7 +137,6 @@ public class Player extends Entity implements ContactListener {
 
 	@Override
 	public void preSolve(Contact arg0, Manifold arg1) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -126,15 +151,27 @@ public class Player extends Entity implements ContactListener {
 	public void setMoving(boolean moving) {
 		this.moving = moving;
 	}
+	
+	public void stayHere() {
+		body.setTransform(body.getPosition(), 0f);
+	}
 
 	public void stopMoving() {
 		Vector2 vel = body.getLinearVelocity();
+		// the Math.abs here will always ensure that the X velocity maintains direction
 		body.setLinearVelocity(new Vector2(2f * (Math.abs(vel.x)/vel.x), 0f));
+	}
+	
+	public void stopMoving(float amount) {
+		Vector2 vel = body.getLinearVelocity();
+		// the Math.abs here will always ensure that the X velocity maintains direction
+		body.setLinearVelocity(new Vector2(amount * (Math.abs(vel.x)/vel.x), 0f));
 	}
 
 	public void update() {
 		setX((int) ((body.getPosition().x) * GameScreen.BOX_TO_WORLD));
 		setY((int) ((body.getPosition().y) * GameScreen.BOX_TO_WORLD));
+		stayHere();
 		
 		if((getY() + getHeight()) <= 0) {
 			reset();
