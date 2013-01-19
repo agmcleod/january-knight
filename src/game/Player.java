@@ -88,7 +88,6 @@ public class Player extends Entity {
 	
 	public void moveLeft() {
 		if(touchingOnLeft) {
-			stopMoving(0);
 			stayHere();
 		}
 		else {
@@ -98,7 +97,6 @@ public class Player extends Entity {
 	
 	public void moveRight() {
 		if(touchingOnRight) {
-			stopMoving(0);
 			stayHere();
 			System.out.println("touching on right");
 		}
@@ -120,7 +118,8 @@ public class Player extends Entity {
 	}
 	
 	public void stayHere() {
-		body.setTransform(body.getPosition(), 0f);
+		//body.setTransform(body.getPosition(), 0f);
+		stopMoving(0);
 	}
 	
 	public void setTouchingOnFoot(boolean touchingOnFoot) {
@@ -150,7 +149,6 @@ public class Player extends Entity {
 	public void update() {
 		setX((int) ((body.getPosition().x) * GameScreen.BOX_TO_WORLD));
 		setY((int) ((body.getPosition().y) * GameScreen.BOX_TO_WORLD));
-		stayHere();
 		
 		if((getY() + getHeight()) <= 0) {
 			reset();

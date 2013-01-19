@@ -59,9 +59,19 @@ public class WorldCollision implements ContactListener {
 	}
 
 	@Override
-	public void preSolve(Contact arg0, Manifold arg1) {
-		// TODO Auto-generated method stub
-
+	public void preSolve(Contact contact, Manifold manifold) {
+		Object fixtureUserDataA = contact.getFixtureA().getUserData();
+		Object fixtureUserDataB = contact.getFixtureB().getUserData();
+		if(fixtureUserDataA instanceof Player || fixtureUserDataB instanceof Player) {
+			WorldManifold worldManifold = contact.getWorldManifold();
+			Vector2 normal = worldManifold.getNormal();
+			if(normal.x == -1.0f || normal.x == 1.0f) {
+				player.stayHere();
+			}
+			else if(normal.x == 0.0f && normal.y == 1.0f) {
+				player.setY((int) worldManifold.getPoints()[0].y);
+			}
+		}
 	}
 
 }
