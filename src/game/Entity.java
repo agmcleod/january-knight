@@ -6,10 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class Entity {
 	private int x;
@@ -24,14 +20,13 @@ public class Entity {
 	private boolean animated;
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
-	private World world;
 	
 	public Entity() {
 		
 	}
 	
-	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated, World world) {
-		init(x, y, width, height, textureImage, animated, world);
+	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated) {
+		init(x, y, width, height, textureImage, animated);
 	}
 	
 	public void addAnimation(int[][] coords) {
@@ -79,10 +74,6 @@ public class Entity {
 	public int getWidth() {
 		return width;
 	}
-
-	public World getWorld() {
-		return world;
-	}
 	
 	public int getX() {
 		return x;
@@ -92,7 +83,7 @@ public class Entity {
 		return y;
 	}
 	
-	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated, World world) {
+	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated) {
 		this.setX(x);
 		this.setY(y);
 		this.setWidth(width);
@@ -105,7 +96,6 @@ public class Entity {
 		else {
 			frames = new Array<TextureRegion>();
 		}
-		this.setWorld(world);
 	}
 
 	public boolean isAnimated() {
@@ -146,10 +136,6 @@ public class Entity {
 
 	public void setWidth(int width) {
 		this.width = width;
-	}
-
-	public void setWorld(World world) {
-		this.world = world;
 	}
 
 	public void setX(int x) {

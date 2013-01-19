@@ -10,26 +10,22 @@ import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class Level {
 	private TiledMap tiledMap;
 	private TileAtlas tileAtlas;
 	private TileMapRenderer tileMapRenderer;
-	private World world;
 	private int[] layerIndexes;
-	private BodyDef collisionDef;
+	private Array<Rectangle> collisionTiles;
 	
-	public Level(String filename, World world) {
+	public Level(String filename) {
 		tiledMap = TiledLoader.createMap(Gdx.files.internal("assets/" + filename));
 		tileAtlas = new TileAtlas(tiledMap, Gdx.files.internal("assets"));
 		tileMapRenderer = new TileMapRenderer(tiledMap, tileAtlas, 8, 8);
-		this.world = world;
+		collisionTiles = new Array<Rectangle>();
 		initGround();
 	}
 	
@@ -54,18 +50,11 @@ public class Level {
 					for(int tx = 0; tx < tiles[ty].length; tx++) {
 						String type = tiledMap.getTileProperty(tiles[ty][tx], "type");
 						if(type != null && type.equals("solid")) {
-							BodyDef solidDef = new BodyDef();
-							float x = tx * GameScreen.TILE_SIZE;
+							float x = tx;
 							// subtracting the y by the highest possible value, 
 							// as the coordinates order needs to be reversed for OpenGL coords 
-							float y = Math.abs(ty - (tiles.length-1)) * GameScreen.TILE_SIZE;
-							Vector2 center = new Vector2((x + halfTile) * GameScreen.WORLD_TO_BOX, (y + halfTile) * GameScreen.WORLD_TO_BOX);
-							solidDef.position.set(center);
-							Body solidBody = world.createBody(solidDef);
-							PolygonShape shape = new PolygonShape();
-							shape.setAsBox(boxTileWidth, boxTileWidth);
-							solidBody.createFixture(shape, 0f);
-							shape.dispose();
+							float y = Math.abs(ty - (tiles.length-1));
+							collisionTiles.add(new Rectangle(x, y, 32, 32));
 						}
 					}
 				}
