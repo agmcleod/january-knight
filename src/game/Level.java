@@ -34,6 +34,10 @@ public class Level {
 		tileAtlas.dispose();
 	}
 	
+	public Array<Rectangle> getCollisionTiles() {
+		return collisionTiles;
+	}
+	
 	public void initGround() {
 		ArrayList<TiledLayer> layers = tiledMap.layers;
 		Iterator<TiledLayer> it = layers.iterator();
@@ -50,10 +54,10 @@ public class Level {
 					for(int tx = 0; tx < tiles[ty].length; tx++) {
 						String type = tiledMap.getTileProperty(tiles[ty][tx], "type");
 						if(type != null && type.equals("solid")) {
-							float x = tx;
+							float x = tx * 32;
 							// subtracting the y by the highest possible value, 
 							// as the coordinates order needs to be reversed for OpenGL coords 
-							float y = Math.abs(ty - (tiles.length-1));
+							float y = Math.abs(ty - (tiles.length-1)) * 32;
 							collisionTiles.add(new Rectangle(x, y, 32, 32));
 						}
 					}

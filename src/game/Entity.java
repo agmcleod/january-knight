@@ -70,6 +70,10 @@ public class Entity {
 	public Texture getTextureImage() {
 		return textureImage;
 	}
+	
+	public int getTopY() {
+		return y + height;
+	}
 
 	public int getWidth() {
 		return width;

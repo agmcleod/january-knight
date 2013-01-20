@@ -34,10 +34,15 @@ public class GameScreen implements Screen, InputProcessor {
 	static final float BOX_TO_WORLD = 100f;
 	static final float TILE_SIZE = 32f;
 	private WorldCollision worldCollision;
+	static final float gravity = 15f;
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
 		levels = new Array<Level>();
+	}
+	
+	public Level currentLevel() {
+		return levels.get(currentLevel);
 	}
 
 	@Override
@@ -107,10 +112,10 @@ public class GameScreen implements Screen, InputProcessor {
 			if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 				player.jump();
 			}
-			System.out.println("pressed");
 		}
 		else if(player.isMoving()) {
 			player.setMoving(false);
+			player.stop();
 		}
 	}
 	
@@ -139,13 +144,11 @@ public class GameScreen implements Screen, InputProcessor {
 	@Override
 	public void resize(int arg0, int arg1) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -194,10 +197,14 @@ public class GameScreen implements Screen, InputProcessor {
 		camera.update();
 		GL10 gl = Gdx.app.getGraphics().getGL10();
 		camera.apply(gl);
-		
+		worldCollision.checkIfPlayerIsOnGround(currentLevel());
+		worldCollision.checkIfPlayerTouchesBySide(currentLevel());
 		processInput();
 		
 		player.update();
+		if(player.reset()) {
+			camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		}
 		updateOffset();
 		
 		if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
