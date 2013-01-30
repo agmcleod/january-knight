@@ -64,7 +64,6 @@ public class Player extends Entity {
 			if (velocity.x < -maxVelocity.x) {
 				velocity.x = -maxVelocity.x;
 			}
-			System.out.println("Moving left");
 		}
 	}
 
