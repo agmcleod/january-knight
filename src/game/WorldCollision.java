@@ -23,7 +23,7 @@ public class WorldCollision {
 			}
 		}
 		player.setTouchingOnFoot(result);
-		if(result && resultingGround != null) {
+		if(player.isFalling() && result && resultingGround != null) {
 			player.setY((int) (resultingGround.y + resultingGround.height));
 		}
 	}
@@ -36,14 +36,14 @@ public class WorldCollision {
 			if((player.getY() > r.y && player.getY() < (r.y + r.height)) 
 					|| (player.getTopY() > r.y && player.getTopY() < (r.y + r.height))) {
 				// touches on right of player
-				if(player.getRightX() > r.x && player.getRightX() < (r.x + r.width)) {
+				if(entityTouchesRightOfRect(player, r) && !entityTouchesLeftOfRect(player, r)) {
 					player.setTouchingOnRight(true);
 					player.setTouchingOnLeft(false);
 					noTouching = false;
 					break;
 				}
 				// touches on the left
-				else if(player.getX() > r.x && player.getX() < (r.x + r.width)) {
+				else if(!entityTouchesRightOfRect(player, r) && entityTouchesLeftOfRect(player, r)) {
 					player.setTouchingOnLeft(true);
 					player.setTouchingOnRight(false);
 					noTouching = false;
@@ -55,5 +55,13 @@ public class WorldCollision {
 			player.setTouchingOnRight(false);
 			player.setTouchingOnLeft(false);
 		}
+	}
+	
+	public boolean entityTouchesLeftOfRect(Entity entity, Rectangle rect) {
+		return (entity.getX() > rect.x && entity.getX() < (rect.x + rect.width));
+	}
+	
+	public boolean entityTouchesRightOfRect(Entity entity, Rectangle rect) {
+		return (entity.getRightX() > rect.x && entity.getRightX() < (rect.x + rect.width));
 	}
 }

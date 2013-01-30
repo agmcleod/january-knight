@@ -14,6 +14,7 @@ public class Player extends Entity {
 	private boolean touchingOnRight = false;
 	private boolean touchingOnLeft = false;
 	private boolean jumpInitiated = false;
+	private boolean falling;
 
 	private int originalX;
 	private int originalY;
@@ -32,6 +33,10 @@ public class Player extends Entity {
 
 	public void dispose() {
 		playerTexture.dispose();
+	}
+	
+	public boolean isFalling() {
+		return falling;
 	}
 
 	public boolean isMoving() {
@@ -87,6 +92,10 @@ public class Player extends Entity {
 			return false;
 		}
 	}
+	
+	public void setFalling(boolean falling) {
+		this.falling = falling;
+	}
 
 	public void setMoving(boolean moving) {
 		this.moving = moving;
@@ -98,10 +107,16 @@ public class Player extends Entity {
 
 	public void setTouchingOnLeft(boolean touchingOnLeft) {
 		this.touchingOnLeft = touchingOnLeft;
+		if(this.touchingOnLeft) {
+			this.velocity.x = 0;
+		}
 	}
 
 	public void setTouchingOnRight(boolean touchingOnRight) {
 		this.touchingOnRight = touchingOnRight;
+		if(this.touchingOnRight) {
+			this.velocity.x = 0;
+		}
 	}
 
 	public void stop() {
@@ -115,6 +130,13 @@ public class Player extends Entity {
 		}
 		else {
 			velocity.y -= 0.5 * GameScreen.gravity * Gdx.graphics.getDeltaTime();
+			// set falling
+			if(velocity.y < 0) {
+				this.falling = true;
+			}
+			else if(!isTouchingOnFoot()) {
+				this.falling = false;
+			}
 			if(velocity.y > maxVelocity.y) {
 				velocity.y = maxVelocity.y;
 			}

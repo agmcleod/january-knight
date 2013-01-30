@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +23,7 @@ public class Level {
 	private TileMapRenderer tileMapRenderer;
 	private int[] layerIndexes;
 	private Array<Rectangle> collisionTiles;
+	private ShapeRenderer renderer;
 	
 	public Level(String filename) {
 		tiledMap = TiledLoader.createMap(Gdx.files.internal("assets/" + filename));
@@ -27,6 +31,19 @@ public class Level {
 		tileMapRenderer = new TileMapRenderer(tiledMap, tileAtlas, 8, 8);
 		collisionTiles = new Array<Rectangle>();
 		initGround();
+		renderer = new ShapeRenderer();
+	}
+	
+	public void debug(OrthographicCamera camera) {
+		renderer.begin(ShapeType.Rectangle);
+		Iterator<Rectangle> it = collisionTiles.iterator();
+		renderer.setProjectionMatrix(camera.combined);
+		while(it.hasNext()) {
+			Rectangle r = it.next();
+			renderer.rect(r.x, r.y, r.width, r.height);
+		}
+		renderer.setColor(Color.WHITE);
+		renderer.end();
 	}
 	
 	public void dispose() {
@@ -76,5 +93,6 @@ public class Level {
 	
 	public void render(OrthographicCamera camera) {
 		tileMapRenderer.render(camera, layerIndexes);
+		debug(camera);
 	}
 }

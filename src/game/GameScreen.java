@@ -51,10 +51,21 @@ public class GameScreen implements Screen, InputProcessor {
 		background.dispose();
 		player.dispose();
 	}
+	
+	public Vector2 getOffset() {
+		return this.offset;
+	}
 
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
+	}
+
+	public void initBackground() {
+		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
+		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
+		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
+		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
 	}
 
 	@Override
@@ -67,18 +78,11 @@ public class GameScreen implements Screen, InputProcessor {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
 	public boolean keyUp(int arg0) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	public void initBackground() {
-		background = new Texture(Gdx.files.internal("assets/bg.jpg"));
-		float widthToUse = (float) (Gdx.graphics.getWidth() - 512) / 512f;
-		trailingBackground = new TextureRegion(background, 0f, 0f, widthToUse, 1f);
-		lightBackgroundTile = new TextureRegion(background, 0f, 480f, 32, 32);
 	}
 	
 	public void loadLevels() {
