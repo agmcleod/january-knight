@@ -1,10 +1,16 @@
 package game;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Entity {
@@ -20,6 +26,7 @@ public class Entity {
 	private boolean animated;
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
+	private ShapeRenderer renderer;
 	
 	public Entity() {
 		
@@ -45,6 +52,14 @@ public class Entity {
 	public String collisionRectangleString() {
 		Rectangle r = getCollisionRectangle();
 		return " x : " + r.x + " y: " + r.y + " width: " + r.width + " height: " + r.height; 
+	}
+	
+	public void debug(OrthographicCamera camera) {
+		renderer.begin(ShapeType.Rectangle);
+		renderer.setProjectionMatrix(camera.combined);
+		renderer.setColor(Color.WHITE);
+		renderer.rect(x, y, width, height);
+		renderer.end();
 	}
 	
 	public Array<Animation> getAnimations() {
@@ -100,13 +115,14 @@ public class Entity {
 		else {
 			frames = new Array<TextureRegion>();
 		}
+		renderer = new ShapeRenderer();
 	}
 
 	public boolean isAnimated() {
 		return animated;
 	}
 
-	public void render(float stateTime, SpriteBatch batch) {
+	public void render(float stateTime, SpriteBatch batch, OrthographicCamera camera) {
 		TextureRegion currentFrame;
 		if(this.animated) {
 			Animation currentAnimation = this.animations.get(focusedAnimation);
@@ -116,6 +132,7 @@ public class Entity {
 			currentFrame = frames.get(focusedAnimation);
 		}
 		batch.draw(currentFrame, x, y);
+		debug(camera);
 	}
 
 	public void setAnimated(boolean animated) {

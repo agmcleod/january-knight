@@ -33,8 +33,8 @@ public class WorldCollision {
 		boolean noTouching = true;
 		while(it.hasNext()) {
 			Rectangle r = it.next();
-			if((player.getY() > r.y && player.getY() < (r.y + r.height)) 
-					|| (player.getTopY() > r.y && player.getTopY() < (r.y + r.height))) {
+			if((player.getY() >= r.y && player.getY() < (r.y + r.height)) 
+					|| (player.getTopY() >= r.y && player.getTopY() <= (r.y + r.height))) {
 				// touches on right of player
 				if(entityTouchesRightOfRect(player, r) && !entityTouchesLeftOfRect(player, r)) {
 					player.setTouchingOnRight(true);
@@ -58,10 +58,12 @@ public class WorldCollision {
 	}
 	
 	public boolean entityTouchesLeftOfRect(Entity entity, Rectangle rect) {
-		return (entity.getX() > rect.x && entity.getX() < (rect.x + rect.width));
+		boolean result = (entity.getX() >= rect.x && entity.getX() <= (rect.x + rect.width));
+		return result;
 	}
 	
 	public boolean entityTouchesRightOfRect(Entity entity, Rectangle rect) {
-		return (entity.getRightX() > rect.x && entity.getRightX() < (rect.x + rect.width));
+		boolean result = (entity.getRightX() >= rect.x && entity.getRightX() <= (rect.x + rect.width));
+		return result;
 	}
 }

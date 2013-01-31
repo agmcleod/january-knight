@@ -26,9 +26,9 @@ public class Player extends Entity {
 		originalY = y;
 		maxVelocity = new Vector2(10f, 150f);
 		velocity = new Vector2(0f, 0f);
-		init(x, y, 128, 128, playerTexture, false);
+		init(x, y, 44, 128, playerTexture, false);
 
-		addFrame(0, 0, 128, 128);
+		addFrame(44, 0, 39, 128);
 	}
 
 	public void dispose() {
@@ -57,15 +57,14 @@ public class Player extends Entity {
 
 	public void jump() {
 		if (touchingOnFoot) {
-			velocity.y += 0.5 * 100.0f * Gdx.graphics.getDeltaTime();
+			velocity.y += 0.8 * maxVelocity.y * Gdx.graphics.getDeltaTime();
 			jumpInitiated = true;
 		}
 	}
 
 	public void moveLeft() {
 		if (!touchingOnLeft) {
-			float a = 10f;
-			velocity.x -= 0.5 * a * Gdx.graphics.getDeltaTime();
+			velocity.x -= 0.5 * maxVelocity.x * Gdx.graphics.getDeltaTime();
 			if (velocity.x < -maxVelocity.x) {
 				velocity.x = -maxVelocity.x;
 			}
@@ -74,8 +73,7 @@ public class Player extends Entity {
 
 	public void moveRight() {
 		if (!touchingOnRight) {
-			float a = 10f;
-			velocity.x += 0.5 * a * Gdx.graphics.getDeltaTime();
+			velocity.x += 0.5 * maxVelocity.x * Gdx.graphics.getDeltaTime();
 			if (velocity.x > maxVelocity.x) {
 				velocity.x = maxVelocity.x;
 			}
@@ -127,9 +125,10 @@ public class Player extends Entity {
 		setX((int) (getX() + velocity.x));
 		if(isTouchingOnFoot() && !jumpInitiated) {
 			velocity.y = 0;
+			this.falling = false;
 		}
 		else {
-			velocity.y -= 0.5 * GameScreen.gravity * Gdx.graphics.getDeltaTime();
+			velocity.y -= 0.8 * GameScreen.gravity * Gdx.graphics.getDeltaTime();
 			// set falling
 			if(velocity.y < 0) {
 				this.falling = true;
