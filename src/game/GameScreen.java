@@ -170,7 +170,7 @@ public class GameScreen implements Screen, InputProcessor {
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
-		camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		// camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 		loadLevels();
 		player = new Player(0, 300);
 		
@@ -198,9 +198,6 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public void update() {
 		stateTime += Gdx.graphics.getDeltaTime();
-		camera.update();
-		GL10 gl = Gdx.app.getGraphics().getGL10();
-		camera.apply(gl);
 		worldCollision.checkIfPlayerIsOnGround(currentLevel());
 		worldCollision.checkIfPlayerTouchesBySide(currentLevel());
 		processInput();
@@ -214,6 +211,10 @@ public class GameScreen implements Screen, InputProcessor {
 		if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
 			camera.position.set(player.getRightX(), camera.position.y, 0);
 		}
+		
+		camera.update();
+		GL10 gl = Gdx.app.getGraphics().getGL10();
+		camera.apply(gl);
 	}
 	
 	public void updateOffset() {
