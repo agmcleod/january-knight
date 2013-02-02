@@ -15,6 +15,7 @@ public class Player extends Entity {
 	private boolean touchingOnLeft = false;
 	private boolean jumpInitiated = false;
 	private boolean falling;
+	private final float jumpSpeed = 450f;
 
 	private int originalX;
 	private int originalY;
@@ -24,7 +25,7 @@ public class Player extends Entity {
 		playerTexture = new Texture(Gdx.files.internal("assets/hero.png"));
 		originalX = x;
 		originalY = y;
-		maxVelocity = new Vector2(10f, 450f);
+		maxVelocity = new Vector2(10f, 7.5f);
 		velocity = new Vector2(0f, 0f);
 		init(x, y, 44, 128, playerTexture, false);
 
@@ -57,7 +58,7 @@ public class Player extends Entity {
 
 	public void jump() {
 		if (touchingOnFoot) {
-			velocity.y += maxVelocity.y * Gdx.graphics.getDeltaTime();
+			velocity.y += jumpSpeed * Gdx.graphics.getDeltaTime();
 			jumpInitiated = true;
 		}
 	}
@@ -143,7 +144,8 @@ public class Player extends Entity {
 				jumpInitiated = false;
 			}
 		}
-		
+		if(velocity.y > 0)
+			System.out.println(velocity.y);
 		setY((int) (getY() + velocity.y));
 	}
 }
