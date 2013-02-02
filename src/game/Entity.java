@@ -62,6 +62,10 @@ public class Entity {
 		renderer.end();
 	}
 	
+	public void dispose() {
+		this.textureImage.dispose();
+	}
+	
 	public Array<Animation> getAnimations() {
 		return animations;
 	}
