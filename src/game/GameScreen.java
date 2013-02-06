@@ -211,6 +211,9 @@ public class GameScreen implements Screen, InputProcessor {
 		if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
 			camera.position.set(player.getRightX(), camera.position.y, 0);
 		}
+		else {
+			camera.position.set(Gdx.graphics.getWidth() / 2, camera.position.y, 0);
+		}
 		
 		camera.update();
 		GL10 gl = Gdx.app.getGraphics().getGL10();
