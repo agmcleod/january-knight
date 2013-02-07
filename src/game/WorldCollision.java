@@ -57,12 +57,12 @@ public class WorldCollision {
 	}
 	
 	public boolean entityTouchesLeftOfRect(Entity entity, Rectangle rect) {
-		boolean result = (entity.getX() >= rect.x && entity.getX() <= (rect.x + rect.width));
+		boolean result = (entity.getCollisionX() >= rect.x && entity.getCollisionX() <= (rect.x + rect.width));
 		return result;
 	}
 	
 	public boolean entityTouchesRightOfRect(Entity entity, Rectangle rect) {
-		boolean result = (entity.getRightX() >= rect.x && entity.getRightX() <= (rect.x + rect.width));
+		boolean result = (entity.getCollisionRightX() >= rect.x && entity.getCollisionRightX() <= (rect.x + rect.width));
 		return result;
 	}
 }

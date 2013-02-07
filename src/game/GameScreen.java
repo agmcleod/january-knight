@@ -21,13 +21,12 @@ public class GameScreen implements Screen, InputProcessor {
 	private TextureRegion lightBackgroundTile;
 	private SpriteBatch batch;
 	private Player player;
-	private float stateTime = 0;
 	private Texture entityTexture;
 	
 	// camera properties
 	private OrthographicCamera camera;
-    private Rectangle glViewport;
     private Vector2 offset;
+    private Rectangle glViewport;
 	
 	private Array<Level> levels;
 	private int currentLevel = 0;
@@ -126,6 +125,10 @@ public class GameScreen implements Screen, InputProcessor {
 			player.setMoving(false);
 			player.stop();
 		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+			player.attack();
+		}
 	}
 	
 	@Override
@@ -145,8 +148,8 @@ public class GameScreen implements Screen, InputProcessor {
 				batch.draw(lightBackgroundTile, w + offset.x, h, 32, 32);
 			}
 		}
-		player.render(stateTime, batch, camera);
-		levels.get(currentLevel).renderEntities(stateTime, batch, camera);
+		player.render(batch, camera);
+		levels.get(currentLevel).renderEntities(batch, camera);
 		batch.end();
 		levels.get(currentLevel).render(camera);
 	}
@@ -206,7 +209,6 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 
 	public void update() {
-		stateTime += Gdx.graphics.getDeltaTime();
 		worldCollision.checkIfEntityIsOnGround(currentLevel(), player);
 		worldCollision.checkIfPlayerTouchesBySide(currentLevel());
 		processInput();
@@ -218,8 +220,8 @@ public class GameScreen implements Screen, InputProcessor {
 		}
 		updateOffset();
 		
-		if(player.getRightX() >= Gdx.graphics.getWidth() / 2) {
-			camera.position.set(player.getRightX(), camera.position.y, 0);
+		if(player.getX() >= Gdx.graphics.getWidth() / 2) {
+			camera.position.set(player.getX(), camera.position.y, 0);
 		}
 		else {
 			camera.position.set(Gdx.graphics.getWidth() / 2, camera.position.y, 0);
@@ -231,7 +233,7 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 	
 	public void updateOffset() {
-		offset.x = player.getRightX() - (Gdx.graphics.getWidth() / 2);
+		offset.x = player.getX() - (Gdx.graphics.getWidth() / 2);
 		if(offset.x < 0) {
 			offset.x = 0;
 		}

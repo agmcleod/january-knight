@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class Player extends MoveableEntity {
 
@@ -11,15 +12,23 @@ public class Player extends MoveableEntity {
 	private int originalY;
 
 	public Player(int x, int y, Texture texture) {
-		super(x, y, texture);
+		super(x, y, texture, true);
 		originalX = x;
 		originalY = y;
-		setCollisionRectangle(new Rectangle(44, 0, 39, 128));
+		setCollisionRectangle(new Rectangle(0, 0, 39, 128));
 		setMaxVelocity(new Vector2(10f, 7.5f));
-		setVelocity(new Vector2(0f, 0f));
-
-		//addFrame(44, 0, 39, 128);
-		addFrame(0, 0, 128, 128);
+		setVelocity(new Vector2(0f, 0f)); 
+		Array<AnimationFrame> frames = new Array<AnimationFrame>();
+		frames.add(new AnimationFrame(0, 0, 128, 128));
+		this.addAnimation("idle", frames, true);
+		
+		Array<AnimationFrame> attackFrames = new Array<AnimationFrame>();
+		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
+		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
+		attackFrames.add(new AnimationFrame(3, 0, 128, 128));
+		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
+		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
+		this.addAnimation("attack", attackFrames, false);
 	}
 
 	public boolean reset() {

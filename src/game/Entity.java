@@ -2,12 +2,14 @@ package game;
 
 import java.util.Iterator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -18,14 +20,17 @@ public class Entity {
 	private int y;
 	private Texture textureImage;
 	// used for storing various animations for when a sprite needs to be animated
-	private Array<Animation> animations;
+	private ObjectMap<String, Animation> animations;
 	// used for still images to be controlled for various states.
-	private Array<TextureRegion> frames;
+	private ObjectMap<String, TextureRegion> frames;
 	private boolean animated;
 	private float animationSpeed = 0.02f;
-	private int focusedAnimation = 0;
+	private String focusedAnimation;
+	private String callbackAnimation;
 	private Rectangle collisionRectangle;
 	private ShapeRenderer renderer;
+	private boolean attacking = false;
+	private float stateTime = 0f;
 	
 	public Entity() {
 		
@@ -35,17 +40,39 @@ public class Entity {
 		init(x, y, textureImage, animated);
 	}
 	
-	public void addAnimation(int[][] coords) {
-		TextureRegion[] frames = new TextureRegion[coords.length];
-		for(int i = 0; i < coords.length; i++) {
-			frames[i] = new TextureRegion(textureImage, coords[i][0] * 32, coords[i][1] * 32, 32, 32);
+	public void addAnimation(String key, Array<AnimationFrame> animationFrames, boolean looping) {
+		TextureRegion[] frames = new TextureRegion[animationFrames.size];
+		Iterator<AnimationFrame> it = animationFrames.iterator();
+		int i = 0;
+		while(it.hasNext()) {
+			AnimationFrame frame = it.next();
+			frames[i] = new TextureRegion(textureImage, frame.getXCoordinate(), frame.getYCoordinate(), frame.width, frame.height);
+			i++;
 		}
-		this.animations.add(new Animation(this.animationSpeed, frames));
+		Animation a = new Animation(this.animationSpeed, frames);
+		if(looping) {
+			a.setPlayMode(Animation.LOOP);
+		}
+		else {
+			a.setPlayMode(Animation.NORMAL);
+		}
+		
+		this.animations.put(key, a);
+		if(this.animations.size == 1) {
+			focusedAnimation = key;
+		}
 	}
 
-	public void addFrame(int x, int y, int width, int height) {
+	public void addFrame(int x, int y, int width, int height, String name) {
 		TextureRegion region = new TextureRegion(this.textureImage, x, y, width, height);
-		this.frames.add(region);
+		this.frames.put(name, region);
+	}
+	
+	public void attack() {
+		if(!attacking) {
+			attacking = true;
+			setCurrentAnimation("attack", "idle");
+		}
 	}
 	
 	public void debug(OrthographicCamera camera) {
@@ -56,7 +83,7 @@ public class Entity {
 		renderer.end();
 	}
 	
-	public Array<Animation> getAnimations() {
+	public ObjectMap<String, Animation> getAnimations() {
 		return animations;
 	}
 
@@ -64,16 +91,20 @@ public class Entity {
 		return this.collisionRectangle;
 	}
 	
+	public int getCollisionRightX() {
+		return (int) (collisionRectangle.width + collisionRectangle.x) + x;
+	}
+	
+	public int getCollisionX() {
+		return (int) collisionRectangle.x + x;
+	}
+	
 	public Rectangle getWorldCollisionRectangle() {
 		return new Rectangle(x + collisionRectangle.x, y + collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
 	}
 
-	public Array<TextureRegion> getFrames() {
+	public ObjectMap<String, TextureRegion> getFrames() {
 		return frames;
-	}
-	
-	public int getRightX() {
-		return (int) collisionRectangle.width + x;
 	}
 
 	public Texture getTextureImage() {
@@ -98,23 +129,31 @@ public class Entity {
 		this.setTextureImage(textureImage);
 		this.setAnimated(animated);
 		if(this.animated) {
-			animations = new Array<Animation>();
+			animations = new ObjectMap<String, Animation>();
 		}
 		else {
-			frames = new Array<TextureRegion>();
+			frames = new ObjectMap<String, TextureRegion>();
 		}
 		renderer = new ShapeRenderer();
+		callbackAnimation = "";
 	}
 
 	public boolean isAnimated() {
 		return animated;
 	}
 
-	public void render(float stateTime, SpriteBatch batch, OrthographicCamera camera) {
+	public void render(SpriteBatch batch, OrthographicCamera camera) {
 		TextureRegion currentFrame;
+		stateTime += Gdx.graphics.getDeltaTime();
 		if(this.animated) {
 			Animation currentAnimation = this.animations.get(focusedAnimation);
-			currentFrame = currentAnimation.getKeyFrame(stateTime, true); 
+			currentFrame = currentAnimation.getKeyFrame(stateTime, true);
+			if(currentAnimation.isAnimationFinished(stateTime) && !callbackAnimation.isEmpty()) {
+				focusedAnimation = callbackAnimation;
+				if(focusedAnimation.equals("idle")) {
+					this.attacking = false;
+				}
+			}
 		}
 		else {
 			currentFrame = frames.get(focusedAnimation);
@@ -127,16 +166,14 @@ public class Entity {
 		this.animated = animated;
 	}
 
-	public void setAnimations(Array<Animation> animations) {
-		this.animations = animations;
-	}
-
 	public void setCollisionRectangle(Rectangle collisionRectangle) {
 		this.collisionRectangle = collisionRectangle;
 	}
-
-	public void setFrames(Array<TextureRegion> frames) {
-		this.frames = frames;
+	
+	public void setCurrentAnimation(String name, String callbackAnimation) {
+		this.focusedAnimation = name;
+		this.callbackAnimation = callbackAnimation;
+		stateTime = 0;
 	}
 
 	public void setTextureImage(Texture textureImage) {

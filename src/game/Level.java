@@ -98,14 +98,14 @@ public class Level {
 	
 	public void render(OrthographicCamera camera) {
 		tileMapRenderer.render(camera, layerIndexes);
-		debug(camera);
+		//debug(camera);
 	}
 	
-	public void renderEntities(float stateTime, SpriteBatch batch, OrthographicCamera camera) {
+	public void renderEntities(SpriteBatch batch, OrthographicCamera camera) {
 		Iterator<MoveableEntity> it = enemies.iterator();
 		while(it.hasNext()) {
 			MoveableEntity enemy = it.next();
-			enemy.render(stateTime, batch, camera);
+			enemy.render(batch, camera);
 		}
 	}
 	

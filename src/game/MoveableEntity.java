@@ -15,8 +15,8 @@ public class MoveableEntity extends Entity {
 	private boolean falling;
 	private float jumpSpeed = 450f;
 	
-	public MoveableEntity(int x, int y, Texture texture) {
-		init(x, y, texture, false);
+	public MoveableEntity(int x, int y, Texture texture, boolean animated) {
+		init(x, y, texture, animated);
 	}
 
 	public float getJumpSpeed() {
