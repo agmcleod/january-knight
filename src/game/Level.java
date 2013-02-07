@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
@@ -24,14 +25,18 @@ public class Level {
 	private int[] layerIndexes;
 	private Array<Rectangle> collisionTiles;
 	private ShapeRenderer renderer;
+	private Array<MoveableEntity> enemies;
 	
-	public Level(String filename) {
+	public Level(String filename, GameScreen gameScreen) {
 		tiledMap = TiledLoader.createMap(Gdx.files.internal("assets/" + filename));
 		tileAtlas = new TileAtlas(tiledMap, Gdx.files.internal("assets"));
 		tileMapRenderer = new TileMapRenderer(tiledMap, tileAtlas, 8, 8);
 		collisionTiles = new Array<Rectangle>();
 		initGround();
 		renderer = new ShapeRenderer();
+		
+		enemies = new Array<MoveableEntity>();
+		enemies.add(new DragonSpawn(1300, 64, gameScreen.getEntityTexture()));
 	}
 	
 	public void debug(OrthographicCamera camera) {
@@ -94,5 +99,22 @@ public class Level {
 	public void render(OrthographicCamera camera) {
 		tileMapRenderer.render(camera, layerIndexes);
 		debug(camera);
+	}
+	
+	public void renderEntities(float stateTime, SpriteBatch batch, OrthographicCamera camera) {
+		Iterator<MoveableEntity> it = enemies.iterator();
+		while(it.hasNext()) {
+			MoveableEntity enemy = it.next();
+			enemy.render(stateTime, batch, camera);
+		}
+	}
+	
+	public void update(WorldCollision wc) {
+		Iterator<MoveableEntity> it = enemies.iterator();
+		while(it.hasNext()) {
+			MoveableEntity enemy = it.next();
+			wc.checkIfEntityIsOnGround(this, enemy);
+			enemy.update();
+		}
 	}
 }

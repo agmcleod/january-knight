@@ -16,8 +16,6 @@ import com.badlogic.gdx.math.Rectangle;
 public class Entity {
 	private int x;
 	private int y;
-	private int width;
-	private int height;
 	private Texture textureImage;
 	// used for storing various animations for when a sprite needs to be animated
 	private Array<Animation> animations;
@@ -26,14 +24,15 @@ public class Entity {
 	private boolean animated;
 	private float animationSpeed = 0.02f;
 	private int focusedAnimation = 0;
+	private Rectangle collisionRectangle;
 	private ShapeRenderer renderer;
 	
 	public Entity() {
 		
 	}
 	
-	public Entity(int x, int y, int width, int height, Texture textureImage, boolean animated) {
-		init(x, y, width, height, textureImage, animated);
+	public Entity(int x, int y, Texture textureImage, boolean animated) {
+		init(x, y, textureImage, animated);
 	}
 	
 	public void addAnimation(int[][] coords) {
@@ -48,22 +47,13 @@ public class Entity {
 		TextureRegion region = new TextureRegion(this.textureImage, x, y, width, height);
 		this.frames.add(region);
 	}
-
-	public String collisionRectangleString() {
-		Rectangle r = getCollisionRectangle();
-		return " x : " + r.x + " y: " + r.y + " width: " + r.width + " height: " + r.height; 
-	}
 	
 	public void debug(OrthographicCamera camera) {
 		renderer.begin(ShapeType.Rectangle);
 		renderer.setProjectionMatrix(camera.combined);
 		renderer.setColor(Color.WHITE);
-		renderer.rect(x, y, width, height);
+		renderer.rect(x + collisionRectangle.x, y + collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
 		renderer.end();
-	}
-	
-	public void dispose() {
-		this.textureImage.dispose();
 	}
 	
 	public Array<Animation> getAnimations() {
@@ -71,19 +61,19 @@ public class Entity {
 	}
 
 	public Rectangle getCollisionRectangle() {
-		return new Rectangle(this.x, this.y, this.width, this.height);
+		return this.collisionRectangle;
+	}
+	
+	public Rectangle getWorldCollisionRectangle() {
+		return new Rectangle(x + collisionRectangle.x, y + collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
 	}
 
 	public Array<TextureRegion> getFrames() {
 		return frames;
 	}
-
-	public int getHeight() {
-		return height;
-	}
 	
 	public int getRightX() {
-		return width + x;
+		return (int) collisionRectangle.width + x;
 	}
 
 	public Texture getTextureImage() {
@@ -91,11 +81,7 @@ public class Entity {
 	}
 	
 	public int getTopY() {
-		return y + height;
-	}
-
-	public int getWidth() {
-		return width;
+		return y + (int) collisionRectangle.height;
 	}
 	
 	public int getX() {
@@ -106,11 +92,9 @@ public class Entity {
 		return y;
 	}
 	
-	public void init(int x, int y, int width, int height, Texture textureImage, boolean animated) {
+	public void init(int x, int y, Texture textureImage, boolean animated) {
 		this.setX(x);
 		this.setY(y);
-		this.setWidth(width);
-		this.setHeight(height);
 		this.setTextureImage(textureImage);
 		this.setAnimated(animated);
 		if(this.animated) {
@@ -147,20 +131,16 @@ public class Entity {
 		this.animations = animations;
 	}
 
+	public void setCollisionRectangle(Rectangle collisionRectangle) {
+		this.collisionRectangle = collisionRectangle;
+	}
+
 	public void setFrames(Array<TextureRegion> frames) {
 		this.frames = frames;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
 	public void setTextureImage(Texture textureImage) {
 		this.textureImage = textureImage;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
 	}
 
 	public void setX(int x) {

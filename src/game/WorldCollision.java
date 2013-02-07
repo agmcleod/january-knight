@@ -2,7 +2,6 @@ package game;
 
 import java.util.Iterator;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 
 public class WorldCollision {
@@ -11,20 +10,20 @@ public class WorldCollision {
 		this.player = player;
 	}
 	
-	public void checkIfPlayerIsOnGround(Level level) {
+	public void checkIfEntityIsOnGround(Level level, MoveableEntity entity) {
 		boolean result = false;
 		Iterator<Rectangle> it = level.getCollisionTiles().iterator();
 		Rectangle resultingGround = null;
 		while(it.hasNext()) {
 			Rectangle r = it.next();
-			if(r.overlaps(player.getCollisionRectangle())) {
+			if(r.overlaps(entity.getWorldCollisionRectangle())) {
 				result = true;
 				resultingGround = r;
 			}
 		}
-		player.setTouchingOnFoot(result);
-		if(player.isFalling() && result && resultingGround != null) {
-			player.setY((int) (resultingGround.y + resultingGround.height));
+		entity.setTouchingOnFoot(result);
+		if(entity.isFalling() && result && resultingGround != null) {
+			entity.setY((int) (resultingGround.y + resultingGround.height));
 		}
 	}
 	

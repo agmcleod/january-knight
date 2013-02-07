@@ -22,6 +22,7 @@ public class GameScreen implements Screen, InputProcessor {
 	private SpriteBatch batch;
 	private Player player;
 	private float stateTime = 0;
+	private Texture entityTexture;
 	
 	// camera properties
 	private OrthographicCamera camera;
@@ -49,7 +50,11 @@ public class GameScreen implements Screen, InputProcessor {
 	public void dispose() {
 		batch.dispose();
 		background.dispose();
-		player.dispose();
+		entityTexture.dispose();
+	}
+	
+	public Texture getEntityTexture() {
+		return this.entityTexture;
 	}
 	
 	public Vector2 getOffset() {
@@ -86,7 +91,7 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 	
 	public void loadLevels() {
-		levels.add(new Level("levelone.tmx"));
+		levels.add(new Level("levelone.tmx", this));
 	}
 
 	@Override
@@ -141,6 +146,7 @@ public class GameScreen implements Screen, InputProcessor {
 			}
 		}
 		player.render(stateTime, batch, camera);
+		levels.get(currentLevel).renderEntities(stateTime, batch, camera);
 		batch.end();
 		levels.get(currentLevel).render(camera);
 	}
@@ -170,9 +176,12 @@ public class GameScreen implements Screen, InputProcessor {
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false);
-		// camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		
+		// setup entities
+		entityTexture = new Texture(Gdx.files.internal("assets/hero.png"));
+		player = new Player(0, 300, entityTexture);
+		
 		loadLevels();
-		player = new Player(0, 300);
 		
 		offset = new Vector2(0, 0);
 		worldCollision = new WorldCollision(player);
@@ -198,11 +207,12 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public void update() {
 		stateTime += Gdx.graphics.getDeltaTime();
-		worldCollision.checkIfPlayerIsOnGround(currentLevel());
+		worldCollision.checkIfEntityIsOnGround(currentLevel(), player);
 		worldCollision.checkIfPlayerTouchesBySide(currentLevel());
 		processInput();
 		
 		player.update();
+		levels.get(currentLevel).update(worldCollision);
 		if(player.reset()) {
 			camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 		}

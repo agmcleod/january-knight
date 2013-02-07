@@ -12,16 +12,11 @@ public class MoveableEntity extends Entity {
 	private boolean touchingOnRight = false;
 	private boolean touchingOnLeft = false;
 	private boolean jumpInitiated = false;
-	private Vector2 entityDimensions;
 	private boolean falling;
 	private float jumpSpeed = 450f;
 	
 	public MoveableEntity(int x, int y, Texture texture) {
-		init(x, y, 44, 128, texture, false);
-	}
-
-	public Vector2 getEntityDimensions() {
-		return entityDimensions;
+		init(x, y, texture, false);
 	}
 
 	public float getJumpSpeed() {
@@ -83,10 +78,6 @@ public class MoveableEntity extends Entity {
 				velocity.x = maxVelocity.x;
 			}
 		}
-	}
-
-	public void setEntityDimensions(Vector2 entityDimensions) {
-		this.entityDimensions = entityDimensions;
 	}
 
 	public void setFalling(boolean falling) {
