@@ -30,6 +30,17 @@ public class Player extends MoveableEntity {
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
 		this.addAnimation("attack", attackFrames, false);
 	}
+	
+	public void animationCallback() {
+		switch(getState()) {
+		case ATTACKING:
+			setState(states.IDLE);
+			setCurrentAnimation("idle");
+		case IDLE:
+		case DEAD:
+			
+		}
+	}
 
 	public boolean reset() {
 		if(getTopY() < 0) {

@@ -1,9 +1,10 @@
 package game;
 
+import game.Animation.AnimationEvent;
+
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Entity {
+public class Entity implements Animation.AnimationEventListener {
 	private int x;
 	private int y;
 	private Texture textureImage;
@@ -29,8 +30,12 @@ public class Entity {
 	private String callbackAnimation;
 	private Rectangle collisionRectangle;
 	private ShapeRenderer renderer;
-	private boolean attacking = false;
 	private float stateTime = 0f;
+	private states state;
+	
+	enum states {
+		IDLE, ATTACKING, DEAD
+	}
 	
 	public Entity() {
 		
@@ -41,21 +46,14 @@ public class Entity {
 	}
 	
 	public void addAnimation(String key, Array<AnimationFrame> animationFrames, boolean looping) {
-		TextureRegion[] frames = new TextureRegion[animationFrames.size];
+		Array<TextureRegion> frames = new Array<TextureRegion>();
 		Iterator<AnimationFrame> it = animationFrames.iterator();
-		int i = 0;
 		while(it.hasNext()) {
 			AnimationFrame frame = it.next();
-			frames[i] = new TextureRegion(textureImage, frame.getXCoordinate(), frame.getYCoordinate(), frame.width, frame.height);
-			i++;
+			frames.add(new TextureRegion(textureImage, frame.getXCoordinate(), frame.getYCoordinate(), frame.width, frame.height));
 		}
-		Animation a = new Animation(this.animationSpeed, frames);
-		if(looping) {
-			a.setPlayMode(Animation.LOOP);
-		}
-		else {
-			a.setPlayMode(Animation.NORMAL);
-		}
+		Animation a = new Animation(this.animationSpeed, frames, looping);
+		a.addEventListener(this);
 		
 		this.animations.put(key, a);
 		if(this.animations.size == 1) {
@@ -68,10 +66,14 @@ public class Entity {
 		this.frames.put(name, region);
 	}
 	
+	public void animationCallback() {
+		
+	}
+	
 	public void attack() {
-		if(!attacking) {
-			attacking = true;
-			setCurrentAnimation("attack", "idle");
+		if(getState() != states.ATTACKING) {
+			setCurrentAnimation("attack");
+			setState(states.ATTACKING);
 		}
 	}
 	
@@ -136,10 +138,16 @@ public class Entity {
 		}
 		renderer = new ShapeRenderer();
 		callbackAnimation = "";
+		setState(states.IDLE);
 	}
 
 	public boolean isAnimated() {
 		return animated;
+	}
+	
+	@Override
+	public void onAnimationEnded(AnimationEvent e) {
+		animationCallback();
 	}
 
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -147,13 +155,7 @@ public class Entity {
 		stateTime += Gdx.graphics.getDeltaTime();
 		if(this.animated) {
 			Animation currentAnimation = this.animations.get(focusedAnimation);
-			currentFrame = currentAnimation.getKeyFrame(stateTime, true);
-			if(currentAnimation.isAnimationFinished(stateTime) && !callbackAnimation.isEmpty()) {
-				focusedAnimation = callbackAnimation;
-				if(focusedAnimation.equals("idle")) {
-					this.attacking = false;
-				}
-			}
+			currentFrame = currentAnimation.getKeyFrame(stateTime);
 		}
 		else {
 			currentFrame = frames.get(focusedAnimation);
@@ -170,9 +172,8 @@ public class Entity {
 		this.collisionRectangle = collisionRectangle;
 	}
 	
-	public void setCurrentAnimation(String name, String callbackAnimation) {
-		this.focusedAnimation = name;
-		this.callbackAnimation = callbackAnimation;
+	public void setCurrentAnimation(String name) {
+		focusedAnimation = name;
 		stateTime = 0;
 	}
 
@@ -186,5 +187,13 @@ public class Entity {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public states getState() {
+		return state;
+	}
+
+	public void setState(states state) {
+		this.state = state;
 	}
 }
