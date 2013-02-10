@@ -1,7 +1,9 @@
 package game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -46,7 +48,7 @@ public class Player extends MoveableEntity {
 	}
 	
 	public void initWeapon() {
-		
+		this.sword = new Weapon(new Rectangle(getX() + 35, getY() + 50, 60, 10), 15f);
 	}
 
 	public boolean reset() {
@@ -58,5 +60,15 @@ public class Player extends MoveableEntity {
 		else {
 			return false;
 		}
-	}	
+	}
+	
+	public void render(SpriteBatch batch, OrthographicCamera camera) {
+		super.render(batch, camera);
+		sword.debug(camera);
+	}
+	
+	public void update() {
+		super.update();
+		sword.update(getX() + 35, getY() + 50);
+	}
 }
