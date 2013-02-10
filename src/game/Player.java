@@ -10,6 +10,7 @@ public class Player extends MoveableEntity {
 
 	private int originalX;
 	private int originalY;
+	private Weapon sword;
 
 	public Player(int x, int y, Texture texture) {
 		super(x, y, texture, true);
@@ -29,6 +30,8 @@ public class Player extends MoveableEntity {
 		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
 		this.addAnimation("attack", attackFrames, false, 0.08f);
+		
+		initWeapon();
 	}
 	
 	public void animationCallback() {
@@ -40,6 +43,10 @@ public class Player extends MoveableEntity {
 		case DEAD:
 			
 		}
+	}
+	
+	public void initWeapon() {
+		
 	}
 
 	public boolean reset() {
