@@ -20,7 +20,7 @@ public class Player extends MoveableEntity {
 		setVelocity(new Vector2(0f, 0f)); 
 		Array<AnimationFrame> frames = new Array<AnimationFrame>();
 		frames.add(new AnimationFrame(0, 0, 128, 128));
-		this.addAnimation("idle", frames, true);
+		this.addAnimation("idle", frames, true, 0.2f);
 		
 		Array<AnimationFrame> attackFrames = new Array<AnimationFrame>();
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
@@ -28,7 +28,7 @@ public class Player extends MoveableEntity {
 		attackFrames.add(new AnimationFrame(3, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
-		this.addAnimation("attack", attackFrames, false);
+		this.addAnimation("attack", attackFrames, false, 0.08f);
 	}
 	
 	public void animationCallback() {

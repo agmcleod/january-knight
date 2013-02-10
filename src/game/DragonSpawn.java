@@ -15,7 +15,7 @@ public class DragonSpawn extends MoveableEntity {
 		
 		Array<AnimationFrame> frames = new Array<AnimationFrame>();
 		frames.add(new AnimationFrame(0, 2, 128, 128));
-		addAnimation("idle", frames, true);
+		addAnimation("idle", frames, true, 0.2f);
 	}
 
 }

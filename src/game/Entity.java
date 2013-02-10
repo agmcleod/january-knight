@@ -25,7 +25,6 @@ public class Entity implements Animation.AnimationEventListener {
 	// used for still images to be controlled for various states.
 	private ObjectMap<String, TextureRegion> frames;
 	private boolean animated;
-	private float animationSpeed = 0.02f;
 	private String focusedAnimation;
 	private String callbackAnimation;
 	private Rectangle collisionRectangle;
@@ -45,14 +44,14 @@ public class Entity implements Animation.AnimationEventListener {
 		init(x, y, textureImage, animated);
 	}
 	
-	public void addAnimation(String key, Array<AnimationFrame> animationFrames, boolean looping) {
+	public void addAnimation(String key, Array<AnimationFrame> animationFrames, boolean looping, float animationSpeed) {
 		Array<TextureRegion> frames = new Array<TextureRegion>();
 		Iterator<AnimationFrame> it = animationFrames.iterator();
 		while(it.hasNext()) {
 			AnimationFrame frame = it.next();
 			frames.add(new TextureRegion(textureImage, frame.getXCoordinate(), frame.getYCoordinate(), frame.width, frame.height));
 		}
-		Animation a = new Animation(this.animationSpeed, frames, looping);
+		Animation a = new Animation(animationSpeed, frames, looping);
 		a.addEventListener(this);
 		
 		this.animations.put(key, a);
