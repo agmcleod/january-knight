@@ -2,7 +2,9 @@ package game;
 
 import java.util.Iterator;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class WorldCollision {
 	private Player player;
@@ -64,5 +66,38 @@ public class WorldCollision {
 	public boolean entityTouchesRightOfRect(Entity entity, Rectangle rect) {
 		boolean result = (entity.getCollisionRightX() >= rect.x && entity.getCollisionRightX() <= (rect.x + rect.width));
 		return result;
+	}
+	
+	public boolean weaponTouchesEntity(Rectangle box, float angle, Entity entity) {
+		Vector2 axis1 = new Vector2(), axis2 = new Vector2(), axis3 = new Vector2(), axis4 = new Vector2();
+		
+		float a = (angle) * (MathUtils.PI/180);
+		
+		Vector2 upperRight = new Vector2(box.x + box.width, box.y + box.height);
+		Vector2 upperLeft = new Vector2(box.x, box.y + box.height);
+		Vector2 lowerRight = new Vector2(box.x + box.width, box.y);
+		Vector2 lowerLeft = new Vector2(box.x, box.y);
+		
+		// rotate the weapon box by its angle
+		upperRight.x = MathUtils.cos(a) * (upperRight.x - lowerLeft.x) - MathUtils.sin(a) * (upperRight.y - lowerLeft.y) + lowerLeft.x;
+		upperRight.y = MathUtils.sin(a) * (upperRight.x - lowerLeft.x) + MathUtils.cos(a) * (upperRight.y - lowerLeft.y) + lowerLeft.y;
+		
+		upperLeft.x = MathUtils.cos(a) * (upperLeft.x - lowerLeft.x) - MathUtils.sin(a) * (upperLeft.y - lowerLeft.y) + lowerLeft.x;
+		upperLeft.y = MathUtils.sin(a) * (upperLeft.x - lowerLeft.x) + MathUtils.cos(a) * (upperLeft.y - lowerLeft.y) + lowerLeft.y;
+		
+		lowerRight.x = MathUtils.cos(a) * (lowerRight.x - lowerLeft.x) - MathUtils.sin(a) * (lowerRight.y - lowerLeft.y) + lowerLeft.x;
+		lowerRight.y = MathUtils.sin(a) * (lowerRight.x - lowerLeft.x) + MathUtils.cos(a) * (lowerRight.y - lowerLeft.y) + lowerLeft.y;
+		
+		axis1.x = entity.getCollisionRightX() - entity.getCollisionX();
+		axis1.y = entity.getCollisionTopY() - entity.getCollisionTopY();
+		
+		axis2.x = entity.getCollisionRightX() - entity.getCollisionX();
+		axis2.y = entity.getCollisionTopY() - entity.getCollisionY();
+		
+		axis3.x = upperLeft.x - lowerLeft.x;
+		axis3.y = upperLeft.y - lowerLeft.y;
+		
+		axis4.x = upperLeft.x - upperRight.x;
+		axis4.y = upperLeft.y - upperRight.y;
 	}
 }

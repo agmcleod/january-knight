@@ -100,6 +100,14 @@ public class Entity implements Animation.AnimationEventListener {
 		return (int) collisionRectangle.x + x;
 	}
 	
+	public int getCollisionTopY() {
+		return (int) (collisionRectangle.height + collisionRectangle.y) + y; 
+	}
+	
+	public int getCollisionY() {
+		return (int) collisionRectangle.y + y;
+	}
+	
 	public Animation getCurrentAnimation() {
 		return this.animations.get(focusedAnimation);
 	}

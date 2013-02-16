@@ -35,7 +35,6 @@ public class Weapon {
 		renderer.translate(box.x + position.getX(), box.y + position.getY(), 0);
 		renderer.rotate(0, 0, 1, position.getAngle());
 		renderer.rect(0, 0, box.width, box.height);
-		
 		renderer.end();
 	}
 	
