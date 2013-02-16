@@ -29,7 +29,7 @@ public class Entity implements Animation.AnimationEventListener {
 	private String callbackAnimation;
 	private Rectangle collisionRectangle;
 	private ShapeRenderer renderer;
-	private float stateTime = 0f;
+	protected float stateTime = 0f;
 	private states state;
 	
 	enum states {
@@ -100,6 +100,10 @@ public class Entity implements Animation.AnimationEventListener {
 		return (int) collisionRectangle.x + x;
 	}
 	
+	public Animation getCurrentAnimation() {
+		return this.animations.get(focusedAnimation);
+	}
+	
 	public Rectangle getWorldCollisionRectangle() {
 		return new Rectangle(x + collisionRectangle.x, y + collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
 	}
@@ -153,7 +157,7 @@ public class Entity implements Animation.AnimationEventListener {
 		TextureRegion currentFrame;
 		stateTime += Gdx.graphics.getDeltaTime();
 		if(this.animated) {
-			Animation currentAnimation = this.animations.get(focusedAnimation);
+			Animation currentAnimation = getCurrentAnimation();
 			currentFrame = currentAnimation.getKeyFrame(stateTime);
 		}
 		else {

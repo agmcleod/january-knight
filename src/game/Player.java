@@ -31,7 +31,7 @@ public class Player extends MoveableEntity {
 		attackFrames.add(new AnimationFrame(3, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
-		this.addAnimation("attack", attackFrames, false, 0.08f);
+		this.addAnimation("attack", attackFrames, false, 0.09f);
 		
 		initWeapon();
 	}
@@ -39,8 +39,11 @@ public class Player extends MoveableEntity {
 	public void animationCallback() {
 		switch(getState()) {
 		case ATTACKING:
+			int frame = getCurrentAnimation().getFrameNumber(this.stateTime);
+			sword.setCurrentPosition(frame);
 			setState(states.IDLE);
 			setCurrentAnimation("idle");
+			sword.setCurrentPosition(0);
 		case IDLE:
 		case DEAD:
 			
@@ -48,7 +51,12 @@ public class Player extends MoveableEntity {
 	}
 	
 	public void initWeapon() {
-		this.sword = new Weapon(new Rectangle(getX() + 35, getY() + 50, 60, 10), 15f);
+		this.sword = new Weapon(new Rectangle(getX() + 35, getY() + 50, 40, 8), 8f);
+		this.sword.addPosition(10, 0, 37);
+		this.sword.addPosition(25, 5, 17);
+		this.sword.addPosition(35, 18, 15);
+		this.sword.addPosition(25, 5, 17);
+		this.sword.addPosition(10, 0, 37);
 	}
 
 	public boolean reset() {
@@ -64,6 +72,10 @@ public class Player extends MoveableEntity {
 	
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
 		super.render(batch, camera);
+		if(getState() == states.ATTACKING) {
+			int frame = getCurrentAnimation().getFrameNumber(this.stateTime);
+			sword.setCurrentPosition(frame + 1);
+		}
 		sword.debug(camera);
 	}
 	

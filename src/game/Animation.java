@@ -7,20 +7,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class Animation {
-	final Array<TextureRegion> keyFrames;  
-    final float frameDuration;  
-    private Array<Animation.AnimationEventListener> _listeners;
-    private boolean loop;
-    
-    public class AnimationEvent extends EventObject {  
+	public class AnimationEvent extends EventObject {  
         public AnimationEvent(Object source) {  
               super(source);  
         }  
-    }
-      
+    }  
     public interface AnimationEventListener {  
        public void onAnimationEnded(AnimationEvent e);  
     }
+    
+    final Array<TextureRegion> keyFrames;
+    final float frameDuration;
+    
+    private Array<Animation.AnimationEventListener> _listeners;
+      
+    private boolean loop;
     
     public Animation (float frameDuration, Array<TextureRegion> keyFrames, boolean loop) {  
         this.frameDuration = frameDuration;  
@@ -29,8 +30,16 @@ public class Animation {
         this.loop = loop;
     }
     
+    public void addEventListener(Animation.AnimationEventListener listener) {
+    	_listeners.add(listener);
+    }
+    
+    public int getFrameNumber(float stateTime) {
+    	return (int) (stateTime / frameDuration);
+    }
+    
     public TextureRegion getKeyFrame(float stateTime) {
-    	int frameNumber = (int) (stateTime / frameDuration);
+    	int frameNumber = getFrameNumber(stateTime);
     	
     	if(!loop) {
     		frameNumber = Math.min(keyFrames.size - 1, frameNumber);  
@@ -43,10 +52,6 @@ public class Animation {
     	}
     	
     	return keyFrames.get(frameNumber);
-    }
-    
-    public void addEventListener(Animation.AnimationEventListener listener) {
-    	_listeners.add(listener);
     }
     
     public void removeEventListener(Animation.AnimationEventListener listener) {
