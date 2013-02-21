@@ -50,6 +50,10 @@ public class Player extends MoveableEntity {
 		}
 	}
 	
+	public Weapon getWeapon() {
+		return this.sword;
+	}
+	
 	public void initWeapon() {
 		this.sword = new Weapon(new Rectangle(getX() + 35, getY() + 50, 40, 8), 8f);
 		this.sword.addPosition(10, 0, 37);

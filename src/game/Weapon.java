@@ -25,7 +25,7 @@ public class Weapon {
 	}
 	
 	public void debug(OrthographicCamera camera) {
-		Position position = positions.get(currentPosition);
+		Position position = getCurrentPosition();
 		
 		renderer.setProjectionMatrix(camera.combined);
 		
@@ -36,6 +36,14 @@ public class Weapon {
 		renderer.rotate(0, 0, 1, position.getAngle());
 		renderer.rect(0, 0, box.width, box.height);
 		renderer.end();
+	}
+	
+	public Rectangle getBox() {
+		return this.box;
+	}
+	
+	public Position getCurrentPosition() {
+		return positions.get(currentPosition);
 	}
 	
 	public void setCurrentPosition(int pos) {

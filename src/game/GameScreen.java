@@ -1,5 +1,7 @@
 package game;
 
+import game.Entity.states;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -41,15 +43,15 @@ public class GameScreen implements Screen, InputProcessor {
 		levels = new Array<Level>();
 	}
 	
-	public Level currentLevel() {
-		return levels.get(currentLevel);
-	}
-
 	@Override
 	public void dispose() {
 		batch.dispose();
 		background.dispose();
 		entityTexture.dispose();
+	}
+
+	public Level getCurrentLevel() {
+		return levels.get(currentLevel);
 	}
 	
 	public Texture getEntityTexture() {
@@ -209,8 +211,12 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 
 	public void update() {
-		worldCollision.checkIfEntityIsOnGround(currentLevel(), player);
-		worldCollision.checkIfPlayerTouchesBySide(currentLevel());
+		worldCollision.checkIfEntityIsOnGround(getCurrentLevel(), player);
+		worldCollision.checkIfPlayerTouchesBySide(getCurrentLevel());
+		if(player.getState() == states.ATTACKING) {
+			Weapon sword = player.getWeapon();
+			worldCollision.weaponTouchesEntities(sword.getBox(), sword.getCurrentPosition().getAngle(), getCurrentLevel());
+		}
 		processInput();
 		
 		player.update();

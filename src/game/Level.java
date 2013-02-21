@@ -60,6 +60,10 @@ public class Level {
 		return collisionTiles;
 	}
 	
+	public Array<MoveableEntity> getEnemies() {
+		return this.enemies;
+	}
+	
 	public void initGround() {
 		ArrayList<TiledLayer> layers = tiledMap.layers;
 		Iterator<TiledLayer> it = layers.iterator();

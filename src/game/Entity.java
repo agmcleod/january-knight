@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class Entity implements Animation.AnimationEventListener {
 	private int x;
@@ -110,6 +111,26 @@ public class Entity implements Animation.AnimationEventListener {
 	
 	public Animation getCurrentAnimation() {
 		return this.animations.get(focusedAnimation);
+	}
+	
+	public Vector2 getLowerLeft() {
+		Rectangle r = getCollisionRectangle();
+		return new Vector2(r.x, r.y);
+	}
+	
+	public Vector2 getLowerRight() {
+		Rectangle r = getCollisionRectangle();
+		return new Vector2(r.x + r.width, r.y);
+	}
+	
+	public Vector2 getUpperLeft() {
+		Rectangle r = getCollisionRectangle();
+		return new Vector2(r.x, r.y + r.height);
+	}
+	
+	public Vector2 getUpperRight() {
+		Rectangle r = getCollisionRectangle();
+		return new Vector2(r.x + r.width, r.y + r.height);
 	}
 	
 	public Rectangle getWorldCollisionRectangle() {
