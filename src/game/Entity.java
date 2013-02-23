@@ -114,22 +114,22 @@ public class Entity implements Animation.AnimationEventListener {
 	}
 	
 	public Vector2 getLowerLeft() {
-		Rectangle r = getCollisionRectangle();
+		Rectangle r = getWorldCollisionRectangle();
 		return new Vector2(r.x, r.y);
 	}
 	
 	public Vector2 getLowerRight() {
-		Rectangle r = getCollisionRectangle();
+		Rectangle r = getWorldCollisionRectangle();
 		return new Vector2(r.x + r.width, r.y);
 	}
 	
 	public Vector2 getUpperLeft() {
-		Rectangle r = getCollisionRectangle();
+		Rectangle r = getWorldCollisionRectangle();
 		return new Vector2(r.x, r.y + r.height);
 	}
 	
 	public Vector2 getUpperRight() {
-		Rectangle r = getCollisionRectangle();
+		Rectangle r = getWorldCollisionRectangle();
 		return new Vector2(r.x + r.width, r.y + r.height);
 	}
 	

@@ -32,7 +32,7 @@ public class Weapon {
 		renderer.begin(ShapeType.Rectangle);
 		renderer.setColor(Color.WHITE);
 		renderer.identity();
-		renderer.translate(box.x + position.getX(), box.y + position.getY(), 0);
+		renderer.translate(box.x, box.y, 0);
 		renderer.rotate(0, 0, 1, position.getAngle());
 		renderer.rect(0, 0, box.width, box.height);
 		renderer.end();
@@ -51,7 +51,7 @@ public class Weapon {
 	}
 	
 	public void update(int x, int y) {
-		box.x = x;
-		box.y = y;
+		box.x = x + getCurrentPosition().getX();
+		box.y = y + getCurrentPosition().getY();
 	}
 }
