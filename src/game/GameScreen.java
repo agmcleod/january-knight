@@ -150,8 +150,9 @@ public class GameScreen implements Screen, InputProcessor {
 				batch.draw(lightBackgroundTile, w + offset.x, h, 32, 32);
 			}
 		}
-		player.render(batch, camera);
 		levels.get(currentLevel).renderEntities(batch, camera);
+		player.render(batch, camera);
+		
 		batch.end();
 		levels.get(currentLevel).render(camera);
 	}
@@ -221,6 +222,7 @@ public class GameScreen implements Screen, InputProcessor {
 		
 		player.update();
 		levels.get(currentLevel).update(worldCollision);
+		
 		if(player.reset()) {
 			camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 		}
