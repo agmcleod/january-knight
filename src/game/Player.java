@@ -18,6 +18,7 @@ public class Player extends MoveableEntity {
 		super(x, y, texture, true);
 		originalX = x;
 		originalY = y;
+		health = 5;
 		setCollisionRectangle(new Rectangle(0, 0, 39, 128));
 		setMaxVelocity(new Vector2(10f, 7.5f));
 		setVelocity(new Vector2(0f, 0f)); 
@@ -44,6 +45,7 @@ public class Player extends MoveableEntity {
 			setState(states.IDLE);
 			setCurrentAnimation("idle");
 			sword.setCurrentPosition(0);
+			sword.setHit(false);
 		case IDLE:
 		case DEAD:
 			

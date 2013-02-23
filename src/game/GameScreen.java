@@ -215,7 +215,7 @@ public class GameScreen implements Screen, InputProcessor {
 		worldCollision.checkIfPlayerTouchesBySide(getCurrentLevel());
 		if(player.getState() == states.ATTACKING) {
 			Weapon sword = player.getWeapon();
-			worldCollision.weaponTouchesEntities(sword.getBox(), sword.getCurrentPosition().getAngle(), getCurrentLevel());
+			worldCollision.weaponTouchesEntities(sword, sword.getCurrentPosition().getAngle(), getCurrentLevel());
 		}
 		processInput();
 		

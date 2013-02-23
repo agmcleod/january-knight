@@ -121,4 +121,11 @@ public class Level {
 			enemy.update();
 		}
 	}
+	
+	public void removeEntities(Array<Integer> toRemove) {
+		Iterator<Integer> it = toRemove.iterator();
+		while(it.hasNext()) {
+			enemies.removeIndex(it.next());
+		}
+	}
 }

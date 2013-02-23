@@ -9,6 +9,7 @@ public class DragonSpawn extends MoveableEntity {
 
 	public DragonSpawn(int x, int y, Texture texture) {
 		super(x, y, texture, true);
+		health = 2;
 		setCollisionRectangle(new Rectangle(0, 0 ,128, 128));
 		setMaxVelocity(new Vector2(12f, 9f));
 		setVelocity(new Vector2(0f, 0f));

@@ -12,6 +12,7 @@ public class Weapon {
 	private ShapeRenderer renderer;
 	private Array<Position> positions;
 	private int currentPosition = 0;
+	private boolean hit = false;
 	
 	public Weapon(Rectangle box, float angle) {
 		this.box = box;
@@ -46,10 +47,18 @@ public class Weapon {
 		return positions.get(currentPosition);
 	}
 	
+	public boolean hasHit() {
+		return hit;
+	}
+	
 	public void setCurrentPosition(int pos) {
 		this.currentPosition = pos;
 	}
-	
+
+	public void setHit(boolean hit) {
+		this.hit = hit;
+	}
+
 	public void update(int x, int y) {
 		box.x = x + getCurrentPosition().getX();
 		box.y = y + getCurrentPosition().getY();

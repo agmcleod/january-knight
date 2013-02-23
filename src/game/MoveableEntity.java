@@ -14,9 +14,14 @@ public class MoveableEntity extends Entity {
 	private boolean jumpInitiated = false;
 	private boolean falling;
 	private float jumpSpeed = 450f;
+	protected int health;
 	
 	public MoveableEntity(int x, int y, Texture texture, boolean animated) {
 		init(x, y, texture, animated);
+	}
+	
+	public int getHealth() {
+		return this.health;
 	}
 
 	public float getJumpSpeed() {
@@ -124,6 +129,11 @@ public class MoveableEntity extends Entity {
 
 	public void stop() {
 		this.velocity.x = 0;
+	}
+	
+	public boolean takeDamage() {
+		health--;
+		return (health <= 0);
 	}
 
 	public void update() {

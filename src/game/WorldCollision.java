@@ -69,9 +69,9 @@ public class WorldCollision {
 		return result;
 	}
 	
-	public void weaponTouchesEntities(Rectangle box, float angle, Level currentLevel) {
+	public void weaponTouchesEntities(Weapon weapon, float angle, Level currentLevel) {
 		Vector2 axis1 = new Vector2(), axis2 = new Vector2(), axis3 = new Vector2(), axis4 = new Vector2();
-		
+		Rectangle box = weapon.getBox();
 		float a = (angle) * (MathUtils.PI/180);
 		
 		Vector2 upperRight = new Vector2(box.x + box.width, box.y + box.height);
@@ -90,15 +90,22 @@ public class WorldCollision {
 		lowerRight.y = MathUtils.sin(a) * (lowerRight.x - lowerLeft.x) + MathUtils.cos(a) * (lowerRight.y - lowerLeft.y) + lowerLeft.y;
 		
 		Iterator<MoveableEntity> it = currentLevel.getEnemies().iterator();
+		int index = 0;
+		Array<Integer> toRemove = new Array<Integer>();
 		while(it.hasNext()) {
 			MoveableEntity entity = it.next();
-			boolean result = false;
-			result = (entity.getWorldCollisionRectangle().contains(box.x, box.y) 
+			boolean collides = false;
+			collides = (entity.getWorldCollisionRectangle().contains(box.x, box.y) 
 				|| entity.getWorldCollisionRectangle().contains(lowerRight.x, lowerRight.y)
 				|| entity.getWorldCollisionRectangle().contains(upperLeft.x, upperLeft.y)
 				|| entity.getWorldCollisionRectangle().contains(upperRight.x, upperRight.y));
 			
-			System.out.println(result);
+			if(collides && !weapon.hasHit() && entity.takeDamage()) {
+				toRemove.add(index);
+				weapon.setHit(true);
+				index++;
+			}
 		}
+		currentLevel.removeEntities(toRemove);
 	}
 }
