@@ -150,11 +150,14 @@ public class GameScreen implements Screen, InputProcessor {
 				batch.draw(lightBackgroundTile, w + offset.x, h, 32, 32);
 			}
 		}
-		player.render(batch, camera);
-		levels.get(currentLevel).renderEntities(batch, camera);
 		
-		
+		getCurrentLevel().renderEntities(batch, camera);
+		player.render(batch);
 		batch.end();
+		
+		player.debug(camera);
+		getCurrentLevel().debug(camera);
+		
 		levels.get(currentLevel).render(camera);
 	}
 

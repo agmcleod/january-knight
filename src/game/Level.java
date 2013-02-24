@@ -48,6 +48,11 @@ public class Level {
 			renderer.rect(r.x, r.y, r.width, r.height);
 		}
 		renderer.setColor(Color.WHITE);
+		Iterator<MoveableEntity> iter = enemies.iterator();
+		while(iter.hasNext()) {
+			MoveableEntity enemy = iter.next();
+			enemy.debug(camera);
+		}
 		renderer.end();
 	}
 	
@@ -102,14 +107,13 @@ public class Level {
 	
 	public void render(OrthographicCamera camera) {
 		tileMapRenderer.render(camera, layerIndexes);
-		//debug(camera);
 	}
 	
 	public void renderEntities(SpriteBatch batch, OrthographicCamera camera) {
 		Iterator<MoveableEntity> it = enemies.iterator();
 		while(it.hasNext()) {
 			MoveableEntity enemy = it.next();
-			enemy.render(batch, camera);
+			enemy.render(batch);
 		}
 	}
 	

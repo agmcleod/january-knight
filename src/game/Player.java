@@ -52,6 +52,11 @@ public class Player extends MoveableEntity {
 		}
 	}
 	
+	public void debug(OrthographicCamera camera) {
+		super.debug(camera);
+		sword.debug(camera);
+	}
+	
 	public Weapon getWeapon() {
 		return this.sword;
 	}
@@ -76,13 +81,12 @@ public class Player extends MoveableEntity {
 		}
 	}
 	
-	public void render(SpriteBatch batch, OrthographicCamera camera) {
-		super.render(batch, camera);
+	public void render(SpriteBatch batch) {
+		super.render(batch);
 		if(getState() == states.ATTACKING) {
 			int frame = getCurrentAnimation().getFrameNumber(this.stateTime);
 			sword.setCurrentPosition(frame + 1);
 		}
-		sword.debug(camera);
 	}
 	
 	public void update() {

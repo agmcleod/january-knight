@@ -182,7 +182,7 @@ public class Entity implements Animation.AnimationEventListener {
 		animationCallback();
 	}
 
-	public void render(SpriteBatch batch, OrthographicCamera camera) {
+	public void render(SpriteBatch batch) {
 		TextureRegion currentFrame;
 		stateTime += Gdx.graphics.getDeltaTime();
 		if(this.animated) {
@@ -193,7 +193,6 @@ public class Entity implements Animation.AnimationEventListener {
 			currentFrame = frames.get(focusedAnimation);
 		}
 		batch.draw(currentFrame, x, y);
-		debug(camera);
 	}
 
 	public void setAnimated(boolean animated) {
