@@ -113,19 +113,19 @@ public class Level {
 		}
 	}
 	
+	public void removeEntities(Array<Integer> toRemove) {
+		Iterator<Integer> it = toRemove.iterator();
+		while(it.hasNext()) {
+			enemies.removeIndex(it.next());
+		}
+	}
+	
 	public void update(WorldCollision wc) {
 		Iterator<MoveableEntity> it = enemies.iterator();
 		while(it.hasNext()) {
 			MoveableEntity enemy = it.next();
 			wc.checkIfEntityIsOnGround(this, enemy);
 			enemy.update();
-		}
-	}
-	
-	public void removeEntities(Array<Integer> toRemove) {
-		Iterator<Integer> it = toRemove.iterator();
-		while(it.hasNext()) {
-			enemies.removeIndex(it.next());
 		}
 	}
 }
