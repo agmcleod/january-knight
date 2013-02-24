@@ -154,11 +154,11 @@ public class GameScreen implements Screen, InputProcessor {
 		getCurrentLevel().renderEntities(batch, camera);
 		player.render(batch);
 		batch.end();
-		
+		levels.get(currentLevel).render(camera);
 		player.debug(camera);
 		getCurrentLevel().debug(camera);
 		
-		levels.get(currentLevel).render(camera);
+		
 	}
 
 	@Override

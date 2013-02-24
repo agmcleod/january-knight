@@ -43,17 +43,18 @@ public class Level {
 		renderer.begin(ShapeType.Rectangle);
 		Iterator<Rectangle> it = collisionTiles.iterator();
 		renderer.setProjectionMatrix(camera.combined);
+		renderer.setColor(Color.WHITE);
 		while(it.hasNext()) {
 			Rectangle r = it.next();
 			renderer.rect(r.x, r.y, r.width, r.height);
 		}
-		renderer.setColor(Color.WHITE);
+		renderer.end();
+		
 		Iterator<MoveableEntity> iter = enemies.iterator();
 		while(iter.hasNext()) {
 			MoveableEntity enemy = iter.next();
 			enemy.debug(camera);
 		}
-		renderer.end();
 	}
 	
 	public void dispose() {
