@@ -133,7 +133,13 @@ public class MoveableEntity extends Entity {
 	
 	public boolean takeDamage() {
 		health--;
-		return (health <= 0);
+		if (health <= 0) {
+			return true;
+		}
+		else {
+			this.flicker = true;
+			return false;
+		}
 	}
 
 	public void update() {

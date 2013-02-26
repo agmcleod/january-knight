@@ -31,7 +31,10 @@ public class Entity implements Animation.AnimationEventListener {
 	private Rectangle collisionRectangle;
 	private ShapeRenderer renderer;
 	protected float stateTime = 0f;
+	protected boolean flicker = false;
+	private float flickerTime = 0;
 	private states state;
+	private boolean visible = true;
 	
 	enum states {
 		IDLE, ATTACKING, DEAD
@@ -177,6 +180,10 @@ public class Entity implements Animation.AnimationEventListener {
 		return animated;
 	}
 	
+	public boolean isFlickering() {
+		return this.flicker;
+	}
+	
 	@Override
 	public void onAnimationEnded(AnimationEvent e) {
 		animationCallback();
@@ -184,7 +191,8 @@ public class Entity implements Animation.AnimationEventListener {
 
 	public void render(SpriteBatch batch) {
 		TextureRegion currentFrame;
-		stateTime += Gdx.graphics.getDeltaTime();
+		float t = Gdx.graphics.getDeltaTime();
+		stateTime += t;
 		if(this.animated) {
 			Animation currentAnimation = getCurrentAnimation();
 			currentFrame = currentAnimation.getKeyFrame(stateTime);
@@ -192,7 +200,12 @@ public class Entity implements Animation.AnimationEventListener {
 		else {
 			currentFrame = frames.get(focusedAnimation);
 		}
-		batch.draw(currentFrame, x, y);
+		if(!this.isFlickering() || (this.isFlickering() && this.visible)) {
+			batch.draw(currentFrame, x, y);
+		}
+		if(this.isFlickering()) {
+			updateFlickerTime(t);
+		}
 	}
 
 	public void setAnimated(boolean animated) {
@@ -206,6 +219,10 @@ public class Entity implements Animation.AnimationEventListener {
 	public void setCurrentAnimation(String name) {
 		focusedAnimation = name;
 		stateTime = 0;
+	}
+	
+	public void setFlicker(boolean flicker) {
+		this.flicker = flicker;
 	}
 
 	public void setTextureImage(Texture textureImage) {
@@ -226,5 +243,14 @@ public class Entity implements Animation.AnimationEventListener {
 
 	public void setState(states state) {
 		this.state = state;
+	}
+	
+	public void updateFlickerTime(float t) {
+		flickerTime += t;
+		this.visible = !this.visible;
+		if(flickerTime > 0.7) {
+			flickerTime = 0;
+			this.flicker = false;
+		}
 	}
 }
