@@ -99,12 +99,13 @@ public class WorldCollision {
 				|| entity.getWorldCollisionRectangle().contains(lowerRight.x, lowerRight.y)
 				|| entity.getWorldCollisionRectangle().contains(upperLeft.x, upperLeft.y)
 				|| entity.getWorldCollisionRectangle().contains(upperRight.x, upperRight.y));
-			
-			if(collides && !weapon.hasHit() && entity.takeDamage()) {
-				toRemove.add(index);
+			if(collides && !weapon.hasHit()) {
+				if(entity.takeDamage()) {
+					toRemove.add(index);
+				}
 				weapon.setHit(true);
-				index++;
 			}
+			index++;
 		}
 		currentLevel.removeEntities(toRemove);
 	}
