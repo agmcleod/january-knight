@@ -69,7 +69,7 @@ public class WorldCollision {
 		return result;
 	}
 	
-	public void weaponTouchesEntities(Weapon weapon, float angle, Level currentLevel) {
+	public Array<Integer> weaponTouchesEntities(Weapon weapon, float angle, Level currentLevel) {
 		Vector2 axis1 = new Vector2(), axis2 = new Vector2(), axis3 = new Vector2(), axis4 = new Vector2();
 		Rectangle box = weapon.getBox();
 		float a = (angle) * (MathUtils.PI/180);
@@ -107,6 +107,6 @@ public class WorldCollision {
 			}
 			index++;
 		}
-		currentLevel.removeEntities(toRemove);
+		return toRemove;
 	}
 }

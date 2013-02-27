@@ -40,7 +40,40 @@ public class GameScreen implements Screen, InputProcessor {
 	
 	public GameScreen(MyGame game) {
 		this.game = game;
-		levels = new Array<Level>();
+	}
+	
+	public void checkIfEnemiesGotHurt() {
+		if(player.getState() == states.ATTACKING) {
+			Weapon sword = player.getWeapon();
+			Array<Integer> toRemove = worldCollision.weaponTouchesEntities(sword, sword.getCurrentPosition().getAngle(), getCurrentLevel());
+			getCurrentLevel().removeEntities(toRemove);
+			if(getCurrentLevel().getEnemies().size == 0) {
+				game.getEndScreen().setPlayerWon(true);
+				gotoEndScreen();
+			}
+		}
+	}
+	
+	public void checkIfPlayerGotHurt() {
+		Array<MoveableEntity> enemies = getCurrentLevel().getEnemies();
+		Iterator<MoveableEntity> it = enemies.iterator();
+		boolean playerCollided = false;
+		while(it.hasNext()) {
+			MoveableEntity e = it.next();
+			if(player.getWorldCollisionRectangle().overlaps(e.getWorldCollisionRectangle())) {
+				if(!player.isColliding()) {
+					if(player.takeDamage()) {
+						game.getEndScreen().setPlayerWon(false);
+						gotoEndScreen();
+					}
+				}
+				
+				playerCollided = true;
+				
+			}
+		}
+		
+		player.setColliding(playerCollided);
 	}
 	
 	@Override
@@ -60,6 +93,10 @@ public class GameScreen implements Screen, InputProcessor {
 	
 	public Vector2 getOffset() {
 		return this.offset;
+	}
+	
+	public void gotoEndScreen() {
+		this.game.setScreen(game.getEndScreen());
 	}
 
 	@Override
@@ -179,6 +216,7 @@ public class GameScreen implements Screen, InputProcessor {
 	public void show() {
 		Gdx.input.setInputProcessor(this);
 		batch = new SpriteBatch();
+		levels = new Array<Level>();
 		initBackground();
 		
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -216,34 +254,15 @@ public class GameScreen implements Screen, InputProcessor {
 	public void update() {
 		worldCollision.checkIfEntityIsOnGround(getCurrentLevel(), player);
 		worldCollision.checkIfPlayerTouchesBySideAndCantMove(getCurrentLevel());
-		if(player.getState() == states.ATTACKING) {
-			Weapon sword = player.getWeapon();
-			worldCollision.weaponTouchesEntities(sword, sword.getCurrentPosition().getAngle(), getCurrentLevel());
-		}
+		
+		checkIfEnemiesGotHurt();
 		processInput();
 		
 		player.update();
 		// updates the enemies
 		getCurrentLevel().update(worldCollision);
 		
-		Array<MoveableEntity> enemies = getCurrentLevel().getEnemies();
-		Iterator<MoveableEntity> it = enemies.iterator();
-		boolean playerCollided = false;
-		while(it.hasNext()) {
-			MoveableEntity e = it.next();
-			if(player.getWorldCollisionRectangle().overlaps(e.getWorldCollisionRectangle())) {
-				if(!player.isColliding()) {
-					if(player.takeDamage()) {
-						this.game.setScreen(game.getEndScreen());
-					}
-				}
-				
-				playerCollided = true;
-				
-			}
-		}
-		
-		player.setColliding(playerCollided);
+		checkIfPlayerGotHurt();
 		
 		if(player.reset()) {
 			camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);

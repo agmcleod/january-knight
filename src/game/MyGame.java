@@ -11,6 +11,7 @@ public class MyGame extends Game {
 	
 	public MyGame() {
 		this.gameScreen = new GameScreen(this);
+		this.endScreen = new EndScreen(this);
 	}
 	
 	@Override
