@@ -30,7 +30,7 @@ public class WorldCollision {
 		}
 	}
 	
-	public void checkIfPlayerTouchesBySide(Level level) {
+	public void checkIfPlayerTouchesBySideAndCantMove(Level level) {
 		Iterator<Rectangle> it = level.getCollisionTiles().iterator();
 		boolean noTouching = true;
 		while(it.hasNext()) {

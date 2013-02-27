@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Iterator;
+
 import game.Entity.states;
 
 import com.badlogic.gdx.Gdx;
@@ -32,8 +34,6 @@ public class GameScreen implements Screen, InputProcessor {
 	
 	private Array<Level> levels;
 	private int currentLevel = 0;
-	static final float WORLD_TO_BOX = 0.01f;
-	static final float BOX_TO_WORLD = 100f;
 	static final float TILE_SIZE = 32f;
 	private WorldCollision worldCollision;
 	static final float gravity = 15f;
@@ -215,7 +215,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public void update() {
 		worldCollision.checkIfEntityIsOnGround(getCurrentLevel(), player);
-		worldCollision.checkIfPlayerTouchesBySide(getCurrentLevel());
+		worldCollision.checkIfPlayerTouchesBySideAndCantMove(getCurrentLevel());
 		if(player.getState() == states.ATTACKING) {
 			Weapon sword = player.getWeapon();
 			worldCollision.weaponTouchesEntities(sword, sword.getCurrentPosition().getAngle(), getCurrentLevel());
@@ -223,7 +223,27 @@ public class GameScreen implements Screen, InputProcessor {
 		processInput();
 		
 		player.update();
-		levels.get(currentLevel).update(worldCollision);
+		// updates the enemies
+		getCurrentLevel().update(worldCollision);
+		
+		Array<MoveableEntity> enemies = getCurrentLevel().getEnemies();
+		Iterator<MoveableEntity> it = enemies.iterator();
+		boolean playerCollided = false;
+		while(it.hasNext()) {
+			MoveableEntity e = it.next();
+			if(player.getWorldCollisionRectangle().overlaps(e.getWorldCollisionRectangle())) {
+				if(!player.isColliding()) {
+					if(player.takeDamage()) {
+						this.game.setScreen(game.getEndScreen());
+					}
+				}
+				
+				playerCollided = true;
+				
+			}
+		}
+		
+		player.setColliding(playerCollided);
 		
 		if(player.reset()) {
 			camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);

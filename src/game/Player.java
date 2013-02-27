@@ -13,11 +13,13 @@ public class Player extends MoveableEntity {
 	private int originalX;
 	private int originalY;
 	private Weapon sword;
+	private boolean colliding;
 
 	public Player(int x, int y, Texture texture) {
 		super(x, y, texture, true);
 		originalX = x;
 		originalY = y;
+		setColliding(false);
 		health = 5;
 		setCollisionRectangle(new Rectangle(0, 0, 39, 128));
 		setMaxVelocity(new Vector2(10f, 7.5f));
@@ -93,5 +95,13 @@ public class Player extends MoveableEntity {
 	public void update() {
 		super.update();
 		sword.update(getX() + 35, getY() + 50);
+	}
+
+	public boolean isColliding() {
+		return colliding;
+	}
+
+	public void setColliding(boolean colliding) {
+		this.colliding = colliding;
 	}
 }

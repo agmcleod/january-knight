@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class MyGame extends Game {
 	
 	private GameScreen gameScreen;
+	private EndScreen endScreen;
 	
 	public MyGame() {
 		this.gameScreen = new GameScreen(this);
@@ -36,5 +37,13 @@ public class MyGame extends Game {
 		cfg.height = 640;
 		cfg.title = "1GAM - January - Knight";
 		LwjglApplication app = new LwjglApplication(new MyGame(), cfg);
+	}
+
+	public EndScreen getEndScreen() {
+		return endScreen;
+	}
+
+	public void setEndScreen(EndScreen endScreen) {
+		this.endScreen = endScreen;
 	}
 }

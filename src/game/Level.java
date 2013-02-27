@@ -75,8 +75,6 @@ public class Level {
 		Iterator<TiledLayer> it = layers.iterator();
 		int layerIndex = 0;
 		Array<Integer> tempIndex = new Array<Integer>();
-		float halfTile = GameScreen.TILE_SIZE / 2;
-		float boxTileWidth = halfTile * GameScreen.WORLD_TO_BOX;
 		while(it.hasNext()) {
 			TiledLayer layer = it.next();
 			if(layer.name.equals("collision")) {
