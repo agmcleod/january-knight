@@ -27,6 +27,7 @@ public class Player extends MoveableEntity {
 		this.addAnimation("idle", frames, true, 0.2f);
 		
 		Array<AnimationFrame> attackFrames = new Array<AnimationFrame>();
+		attackFrames.add(new AnimationFrame(0, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(1, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(2, 0, 128, 128));
 		attackFrames.add(new AnimationFrame(3, 0, 128, 128));

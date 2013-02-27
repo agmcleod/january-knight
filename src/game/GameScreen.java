@@ -155,10 +155,8 @@ public class GameScreen implements Screen, InputProcessor {
 		player.render(batch);
 		batch.end();
 		levels.get(currentLevel).render(camera);
-		player.debug(camera);
-		getCurrentLevel().debug(camera);
-		
-		
+		//player.debug(camera);
+		//getCurrentLevel().debug(camera);
 	}
 
 	@Override
